@@ -5,17 +5,24 @@ Web-ohjelmoinnin harjoitustyö keväällä 2015.
 [Harjoitustyön tehtävänanto on täällä](http://www.cs.tut.fi/~seitti/2015/harjoitustyot/tamplr.html).
 
 
-## Tekijät
+## Harjoitustyö
+
+Tekijät:
 
 * Ryhmä X
     * Yyy Yyy, NNNNNN
     * Zzz Zzz, NNNNNN
 
 
+Tämä harjoitustyö on ajossa Herokussa osoitteessa:
+
+http://xxx.herokuapp.com
+
+
 ## Kysyttävää?
 
 Paras tapa harjoitustyöhön liittyvien kysymysten esittämiseen on
-[luoda uusi *issue* harjoitustyöpohjan repositorioon](https://gitlab.rd.tut.fi/tie-23500_2014-2015/template_project/issues)
+[luoda uusi issue harjoitustyöpohjan repositorioon](https://gitlab.rd.tut.fi/tie-23500_2014-2015/template_project/issues)
 (tai kommentoida olemassaolevaa).
 Kurssihenkilökunta seurailee tätä ja vastailee kysymyksiin.
 
@@ -25,9 +32,16 @@ Myös tyhmät kysymykset on sallittuja.
 Samoin muiden kysymyksiin vastaaminen.
 
 
-## Kehitysympäristö
+## Sovelluksen käynnistys
 
-[Ohjeita kehitysympäristön pystytykseen, sovelluksen suoritukseen ja Herokun käyttöön on täällä.](http://www.cs.tut.fi/~seitti/2015/harjoitustyot/pystytys.html)
+Sovellus käynnistyy osoitteeseen http://localhost:3000 suorittamalla
+
+```sh
+npm install
+PORT=3000 npm start
+```
+
+[Lisää ohjeita kehitysympäristön pystytykseen, sovelluksen suorittamiseen ja Herokussa julkaisuun täällä.](http://www.cs.tut.fi/~seitti/2015/harjoitustyot/pystytys.html)
 
 
 ## Repositorion sisältö
@@ -80,13 +94,14 @@ Nämä web-palvelin tarjoilee sellaisenaan.
 #### bin/
 Tässä kansiossa on pari skriptiä, joita ei luultavasti tarvitse muokata.
 
-* `bin/www` on sovelluksen käynnistysskripti.
+`bin/www` on sovelluksen käynnistysskripti.
 Sen voi suorittaa myös komennolla `npm start`.
-* `bin/reset-dbs` on skripti tietokantojen alustukseen.
-Kun muutat jotain Sequelizen mallia,
-jota vastaava taulu on jo tietokannassa,
-täytyy tämä skripti ajaa.
-Vasta tällöin muutokset tulevat voimaan.
+
+`bin/reset-dbs` on skripti tietokantojen alustukseen.
+
+**HUOM:** kun muutat jotain Sequelizen mallia,
+jota vastaava taulu on jo tietokannassa, täytyy `bin/reset-dbs` suorittaa.
+Vasta tällöin tietokantarakenteen muutokset tulevat voimaan.
 Tyhjentää samalla tietokannan.
 
 #### Vagrantfile ja bootstrap.sh
