@@ -1,8 +1,12 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+h1.tamplr-logo {
+  font-family: 'Bree Serif', serif;
+  color: violet ;
 }
 
-a {
-  color: #00B7FF;
+h1.tamplr-logo:after {
+  content: ".";
+  position: relative;
+  right: 0.1em;
 }
+
+

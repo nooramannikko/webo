@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Tamplr</title>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <h1 class="tamplr-logo">tamplr</h1>
+    <p>Tamplr:ssa on <%= users.length %> käyttäjää.
     <ul>
     <% for(var i=0; i<users.length; i++) {%>
       <% var u = users[i]; %>
