@@ -7,8 +7,24 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <ul>
     <% for(var i=0; i<users.length; i++) {%>
-      <li><%= users[i] %></li>
+      <% var u = users[i]; %>
+      <li>
+        <a href="/api/user/<%= u.username %>">
+          <%= u.username %>
+        </a>
+      </li>
     <% } %>
+    </ul>
+    <p>
+      Voit lisätä uuden käyttäjän seuraavanlaisella
+      <a href="http://curl.haxx.se/">curl</a>-komennolla:
+    </p>
+    <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{"username": "teemu"}'</pre>
+    <p>
+      Windowsissa pitää käyttää vähän ylimääräisiä kenoviivoja:
+    </p>
+    <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{\"username\": \"teemu\"}'</pre>
   </body>
 </html>

@@ -7,6 +7,7 @@ router.get('/', function(req, res, next) {
   models.User.findAll().then(function(users) {
     res.render('index', {
       title: 'Express',
+      host: req.headers.host,
       users: users
     });
   });
