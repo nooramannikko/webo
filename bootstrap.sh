@@ -1,15 +1,13 @@
 
-# http://askubuntu.com/a/227513
-locale-gen en_US en_US.UTF-8 fi_FI fi_FI.UTF-8
-dpkg-reconfigure locales
-
 apt-get update
-apt-get install -y git nodejs npm
+apt-get upgrade
+apt-get install -y git nodejs npm postgresql
 
-# In ubuntu node executable is installed as nodejs.
-# Renaming it to node.
-ln -s /usr/bin/nodejs /usr/bin/node
+# on ubuntu, Node.js executable installs as nodejs, not node as usual.
+# nodejs-legacy makes a symlink node -> nodejs
+apt-get install nodejs-legacy
 
-# Installing Heroku toolbelt
-wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-
+# Create PostgreSQL database postgres://vagrant:vagrant@localhost/tamplr
+sudo -u postgres psql -c "CREATE ROLE vagrant WITH SUPERUSER PASSWORD 'vagrant' LOGIN;"
+sudo -u vagrant createdb
+sudo -u vagrant psql -c "CREATE DATABASE tamplr;"

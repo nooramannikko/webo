@@ -10,15 +10,22 @@ var db        = {};
 
 function connectToDatabase() {
 
-  // Jos ympäristömuuttuja DATABASE_URL on asetettu, kuten Heroku tekee,
-  // niin oletetaan että kyseessä on postgres-tietokannan osoite
-  // ja käytetään sitä.
+  // Käytettävä tietokanta valitaan seuraavasti:
   //
-  // Ellei, niin käytetään sqlite-tietokantaa.
+  // Heroku: Jos ympäristömuuttuja DATABASE_URL on asetettu, kuten Heroku tekee,
+  // niin oletetaan että kyseessä on postgres-tietokannan osoite ja käytetään sitä.
+  //
+  // Vagrant: Jos ollaan Vagrant-ympäristössä (käyttäjä on nimeltään vagrant),
+  // niin käytetään Vagrantiin asennettua PostgreSQL-kantaa.
+  //
+  // Muussa tapauksessa käytetään SQLite-kantaa tiedostossa database-tamplr.
 
   var url = process.env.DATABASE_URL;
   if (url) {
     return connectToPostgres(url);
+  }
+  else if (process.env.USER==='vagrant') {
+    return connectToPostgres('postgres://vagrant:vagrant@localhost/tamplr');
   }
   else {
     return connectToSqlite();
@@ -26,6 +33,7 @@ function connectToDatabase() {
 }
 
 function connectToSqlite() {
+  console.log("Using SQLite database.");
   return new Sequelize('tamplr', 'tamplr', 'tamplr', {
     host: 'localhost',
     dialect: 'sqlite',
@@ -34,7 +42,7 @@ function connectToSqlite() {
 }
 
 function connectToPostgres(url) {
-  console.log("Using database " + url);
+  console.log("Using PostgreSQL database: " + url);
   var m = url.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+)(?::(\d+))?\/(.+)/);
   if (!m) {
     throw "Error parsing DATABASE_URL: " + url;
