@@ -6,14 +6,19 @@ var models = require('../models');
 
 router.post('/', function(req, res, next) {
 
-  // TODO
+  // Pitää vielä tarkistaa, onko username jo jollain muulla
+  // ja onko usernamessa vain sallittuja merkkejä
 
   var username = req.body.username;
-  if (!username) {
+  var name = req.body.name;
+  var password = req.body.password;
+  if (!username || !name || !password) {
     return res.status(400).json({error: 'InvalidUserName'});
   }
   models.User.create({
-    username: username
+    username: username,
+    name: name,
+    password: password
   }).then(function(user) {
     return res.status(201).json(user);
   },
@@ -25,7 +30,7 @@ router.post('/', function(req, res, next) {
 
 router.get('/:username', function(req, res, next) {
 
-  // TODO
+  // TODO : ei toimi
 
   var username = req.params['username'];
   var query = {where: {username: username}};

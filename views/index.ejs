@@ -18,6 +18,7 @@
       </li>
     <% } %>
     </ul>
+    <!--
     <p>
       Voit lisätä uuden käyttäjän seuraavanlaisella
       <a href="http://curl.haxx.se/">curl</a>-komennolla:
@@ -26,6 +27,18 @@
     <p>
       Windowsissa pitää käyttää vähän ylimääräisiä kenoviivoja:
     </p>
-    <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{\"username\": \"teemu\"}'</pre>
+    <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{\"username\": \"teemu\"}'</pre>-->
+
+    <form method="POST" action="http://localhost:3000/api/user">
+      username: <input type="text" name="username"><br>
+      name: <input type="text" name="name"><br>
+      password: <input type="text" name="password"><br>
+      <input type="submit" value="Lisää käyttäjä">
+    </form><br>
+
+    <form method="GET" action="http://localhost:3000/api/user/:teemu">
+      username: <input type="text" name="username"><br>
+      <input type="submit" value="Hae käyttäjä">
+    </form>
   </body>
 </html>
