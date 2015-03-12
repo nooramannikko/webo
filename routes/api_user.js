@@ -6,37 +6,54 @@ var models = require('../models');
 
 router.post('/', function(req, res, next) {
 
-  // Pitää vielä tarkistaa, onko username jo jollain muulla
-  // ja onko usernamessa vain sallittuja merkkejä
-
   var username = req.body.username;
+  var usernameRegex = /^([a-z][a-z0-9_]*)$/.test(username);
   var name = req.body.name;
   var password = req.body.password;
-  if (!username || !name || !password) {
+  if (!username || !usernameRegex) {
     return res.status(400).json({error: 'InvalidUserName'});
   }
-  models.User.create({
-    username: username,
-    name: name,
-    password: password
-  }).then(function(user) {
-    return res.status(201).json(user);
-  },
-  function(err) {
-    return res.status(500).json({error: 'ServerError'});
-  });
-});
+  if (!name) {
+    return res.status(400).json({error: 'NameEmpty'});
+  }
+  if (!password) {
+    return res.status(400).json({error: 'PasswordEmpty'});
+  }
 
+  var query = {where: {username: username}};
+  models.User.findOne(query).then(function(user) {
+    if (user) {
+      return res.status(409).json({error: 'UserNameAlreadyInUse'});
+    }
+    else {
+      models.User.create({
+      username: username,
+      name: name,
+      password: password // salasanan piilottaminen pyynnössä?
+      }).then(function(user) {
+        // vastaukseen ei speksattu käyttäjän tietoja
+        return res.status(201).json(); 
+      },
+      function(err) {
+        return res.status(500).json({error: 'ServerError'});
+      });
+    }
+  });
+ 
+});
 
 router.get('/:username', function(req, res, next) {
 
-  // TODO : ei toimi
+  // TODO : 
+  // Pyyntö pitää saada tehtyä formista osoitteeseen /:username eikä ?username=:username
+  // Toimii, jos manuaalisesti kirjottaa osoiterivile oikean urlin
 
   var username = req.params['username'];
   var query = {where: {username: username}};
   models.User.findOne(query).then(function(user) {
     if (user) {
-      return res.json(user);
+      // ei palauteta salasanaa
+      return res.status(200).json({username: user.username, name: user.name});
     }
     else {
       return res.status(404).json({error: 'UserNotFound'});
