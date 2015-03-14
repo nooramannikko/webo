@@ -3,7 +3,10 @@
   <head>
     <title>Tamplr</title>
     <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css'>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="/javascript/getUser.js"></script>
   </head>
   <body>
     <h1 class="tamplr-logo">tamplr</h1>
@@ -36,9 +39,11 @@
       <input type="submit" value="Lisää käyttäjä">
     </form><br>
 
-    <form method="GET" action="http://localhost:3000/api/user">
-      username: <input type="text" name="username"><br>
+    <form id="getuser" method="GET" action="http://localhost:3000/api/user">
+      username: <input type="text" id="getuser-username"><br>
       <input type="submit" value="Hae käyttäjä">
     </form>
+
+    <p id="output"></p>
   </body>
 </html>
