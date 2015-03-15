@@ -42,7 +42,13 @@
     <form id="getuser" method="GET" action="http://localhost:3000/api/user">
       username: <input type="text" id="getuser-username"><br>
       <input type="submit" value="Hae käyttäjä">
-    </form>
+    </form><br>
+
+    <form id="login" method="POST" action="http://localhost:3000/login">
+      username: <input type="text" name="username"><br>
+      password: <input type="password" name="password"><br>
+      <input type="submit" value="Kirjaudu">
+    </form><br>
 
     <p id="output"></p>
   </body>
