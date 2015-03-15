@@ -4,7 +4,10 @@ var router = express.Router();
 var models = require('../models');
 
 var passport = require('passport');
-var BasicStrategy = require('passport-http').Strategy;
+var BasicStrategy = require('passport-http').BasicStrategy;
+
+router.use(passport.initialize());
+router.use(passport.session());
 
 router.get('/', function(req, res, next) {
   models.User.findAll().then(function(users) {
@@ -13,6 +16,50 @@ router.get('/', function(req, res, next) {
       users: users
     });
   });
+});
+
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    models.User.find( { where: {username: username}} )
+      .success(function(user){
+      
+        // if the user does not exist
+        if(!user)
+          return done(null, false);
+        // if the password does not match
+        else if(password !== user.password)
+          return done(null, false);
+        // if everything is OK, return null as the error
+        // and the authenticated user
+        else
+          return done(null, user);
+        
+      })
+      // if command executed with error
+      .error(function(err){
+        return done(err);
+      });
+  }
+));
+
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function (user, done) {
+    models.User.find( { where: {username: user.username}}, function (err, user) {
+        done(err, user);
+    });
+});
+
+router.get('/login',
+  passport.authenticate('basic', { session: true }),
+  function(req, res){
+    res.json({ username: req.user.username, name: req.user.name });
+  });
+
+router.get('/api/ht', function(req, res, next) {
+  res.json({ group: 'nununu' });
 });
 
 /*router.post('/login', function(req, res, next) {

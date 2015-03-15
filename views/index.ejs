@@ -32,24 +32,28 @@
     </p>
     <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{\"username\": \"teemu\"}'</pre>-->
 
-    <form method="POST" action="http://localhost:3000/api/user">
+    <form method="POST" action="/api/user">
       username: <input type="text" name="username"><br>
       name: <input type="text" name="name"><br>
       password: <input type="password" name="password"><br>
       <input type="submit" value="Lisää käyttäjä">
     </form><br>
 
-    <form id="getuser" method="GET" action="http://localhost:3000/api/user">
+    <form id="getuser" method="GET" action="/api/user">
       username: <input type="text" id="getuser-username"><br>
       <input type="submit" value="Hae käyttäjä">
     </form><br>
 
-    <form id="login" method="POST" action="http://localhost:3000/login">
-      username: <input type="text" name="username"><br>
-      password: <input type="password" name="password"><br>
+    <p id="output"></p>
+
+    <form id="login" method="GET" action="/login">
       <input type="submit" value="Kirjaudu">
     </form><br>
 
-    <p id="output"></p>
+
+    <form method="GET" action="/api/ht">
+      <input type="submit" value="Mikä ryhmä">
+    </form><br>
+
   </body>
 </html>

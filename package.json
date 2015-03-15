@@ -13,7 +13,7 @@
     "express": "~4.11.1",
     "morgan": "~1.5.1",
     "passport": "^0.2.1",
-    "passport-local": "^1.0.0",
+    "passport-http": "^0.2.2",
     "pg": "^4.2.0",
     "pg-hstore": "^2.3.1",
     "sequelize": "^2.0.0-rc8",
