@@ -3,13 +3,16 @@ var router = express.Router();
 
 var models = require('../models');
 
+var crypto = require('crypto');
+
 
 router.post('/', function(req, res, next) {
 
   var username = req.body.username;
   var usernameRegex = /^([a-z][a-z0-9_]*)$/.test(username);
   var name = req.body.name;
-  var password = req.body.password;
+  var sha256 = crypto.createHash('sha256');
+  var password = sha256.update(req.body.password).digest('base64');
   if (!username || !usernameRegex) {
     return res.status(400).json({error: 'InvalidUserName'});
   }
@@ -43,10 +46,6 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/:username', function(req, res, next) {
-
-  // TODO : 
-  // Pyyntö pitää saada tehtyä formista osoitteeseen /:username eikä ?username=:username
-  // Toimii, jos manuaalisesti kirjottaa osoiterivile oikean urlin
 
   var username = req.params['username'];
   var query = {where: {username: username}};

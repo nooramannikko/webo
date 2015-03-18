@@ -6,6 +6,8 @@ var models = require('../models');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 
+var crypto = require('crypto');
+
 router.use(passport.initialize());
 router.use(passport.session());
 
@@ -27,7 +29,9 @@ passport.use(new BasicStrategy(
         if(!user)
           return done(null, false);
         // if the password does not match
-        else if(password !== user.password)
+        /*else if(password !== user.password)
+          return done(null, false);*/
+        else if (crypto.createHash('sha256').update(password).digest('base64') !== user.password)
           return done(null, false);
         // if everything is OK, return null as the error
         // and the authenticated user
