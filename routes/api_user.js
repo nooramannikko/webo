@@ -5,6 +5,8 @@ var models = require('../models');
 
 var crypto = require('crypto');
 
+var uID = 1; // user id
+
 
 router.post('/', function(req, res, next) {
 
@@ -30,13 +32,21 @@ router.post('/', function(req, res, next) {
     }
     else {
       models.User.create({
+      id: uID, 
       username: username,
       name: name,
       password: password // salasanan piilottaminen pyynnössä?
       }).then(function(user) {
-        // vastaukseen ei speksattu käyttäjän tietoja
+        uID += 1;
+        // Luodaan oletusblogi
+        models.Blog.create({
+          id: user.username, 
+          name: 'Oletusblogi'
+        });
+        // Linkitys useriin???
+
         return res.status(201).json(); 
-      },
+      }, 
       function(err) {
         return res.status(500).json({error: 'ServerError'});
       });

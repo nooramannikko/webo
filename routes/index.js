@@ -56,6 +56,25 @@ passport.deserializeUser(function (user, done) {
     });
 });
 
+// Uloskirjaus
+function logout(req, res) {
+  req.session.destroy(function(err) {
+    res.redirect('/');
+  });
+}
+
+// Tarkista, onko kirjautunut
+var basicAuth = passport.authenticate('basic', {session: false});
+function apiAuth(req, res, next) {
+  if (req.user) {
+    // on kirjautunut
+    next();
+  }
+  else {
+    basicAuth(req, res, next);
+  }
+}
+
 router.get('/login',
   passport.authenticate('basic', { session: true }),
   function(req, res){

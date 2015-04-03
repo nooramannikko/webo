@@ -32,6 +32,7 @@
     </p>
     <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{\"username\": \"teemu\"}'</pre>-->
 
+    <!-- Käyttäjän jutut -->
     <form method="POST" action="/api/user">
       username: <input type="text" name="username"><br>
       name: <input type="text" name="name"><br>
@@ -46,14 +47,35 @@
 
     <p id="output"></p>
 
+    <!-- Kirjaudu sisään -->
     <form id="login" method="GET" action="/login">
       <input type="submit" value="Kirjaudu">
     </form><br>
 
-
+    <!-- Ryhmä -->
     <form method="GET" action="/api/ht">
       <input type="submit" value="Mikä ryhmä">
     </form><br>
+
+    <!-- Blogijutut -->
+    <form method="POST" action="/api/blog">
+      name: <input type="text" name="blogname"><br>
+      <input type="submit" value="Luo blogi">
+    </form><br>
+
+    <form id="getblog" method="GET" action="/api/blog">
+      id: <input type="text" name="getblog-blogid"><br>
+      <input type="submit" value="Hae blogi">
+    </form><br>
+
+    <p id="blogoutput"></p>
+
+    <input id="deleteblog-id" type="text"><br>
+    <button id="deleteblog" onclick="deleteBlog()">Poista blogi</button><br>
+    <p id="deleteblogoutput"></p>
+
+    <!-- Kirjaudu ulos -->
+    <button id="logout" onclick="logout()">Kirjaudu ulos</button>
 
   </body>
 </html>

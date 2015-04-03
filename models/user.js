@@ -2,6 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define("User", {
+    id: DataTypes.INTEGER,
     username: DataTypes.STRING,
     name: DataTypes.STRING,
     password: DataTypes.STRING
@@ -9,10 +10,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // Tässä voi assosioida malleja toisiinsa
-        // http://sequelize.readthedocs.org/en/latest/docs/associations/
-        //
-        // Tyyliin
-        // User.hasMany(models.BlogPost);
+        User.belongsToMany(models.Blog, {as: 'AuthoredBlogs', through: 'BlogAuthors'});
+        //User.hasMany(models.Post, {as: 'AuthoredPosts'});
       }
     }
   });
