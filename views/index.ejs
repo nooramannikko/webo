@@ -48,8 +48,15 @@
     <p id="output"></p>
 
     <!-- Kirjaudu sisään -->
-    <form id="login" method="GET" action="/login">
+    <form id="login" method="POST" action="/login">
+      username: <input type="text" name="username"><br>
+      password: <input type="password" name="password"><br>
       <input type="submit" value="Kirjaudu">
+    </form><br>
+
+    <!-- Kirjaudu ulos -->
+    <form id="login" method="POST" action="/logout">
+      <input type="submit" value="Kirjaudu ulos">
     </form><br>
 
     <!-- Ryhmä -->
@@ -73,9 +80,6 @@
     <input id="deleteblog-id" type="text"><br>
     <button id="deleteblog" onclick="deleteBlog()">Poista blogi</button><br>
     <p id="deleteblogoutput"></p>
-
-    <!-- Kirjaudu ulos -->
-    <button id="logout" onclick="logout()">Kirjaudu ulos</button>
 
   </body>
 </html>

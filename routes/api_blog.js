@@ -8,37 +8,24 @@ var bID = 1; // IDt blogeille
 
 router.post('/', function(req, res, next) {
 
-  var blogname = req.body.name;
+  var blogname = req.body.blogname;
   if (!blogname) {
     return res.status(400).json({error: 'MissingBlogName'});
   }
-  // Hae käyttäjä
-  apiAuth(req, res, function() {
-    var user = req.user;
-    models.Blog.create({
-    name: blogname, 
-    id: bID
-    }).then(function(blog) {
-      bID += 1;
-      //blog.addAuthor(user);
-      //user.addAuthoredBlogs(blog);
-      return res.status(201).json({id: blog.id}); 
-    },
-    function(err) {
-      return res.status(500).json({error: 'ServerError'});
-    });
-  });
-
-  /*models.Blog.create({
+  
+  var user = req.user;
+  models.Blog.create({
   id: bID, 
   name: blogname
   }).then(function(blog) {
     bID += 1;
+    //blog.addAuthor(user);
+    //user.addAuthoredBlogs(blog);
     return res.status(201).json({id: blog.id});
   }, 
   function(err) {
     return res.status(500).json({error: 'ServerError'});
-  });*/
+  });
  
 });
 
