@@ -42,10 +42,11 @@ router.post('/', function(req, res, next) {
         models.Blog.create({
           id: user.username, 
           name: 'Oletusblogi'
+        }).then(function(blog) {
+          return blog.addAuthor(user);
+        }).then(function() {
+          return res.status(201).json(); 
         });
-        // Linkitys useriin???
-
-        return res.status(201).json(); 
       }, 
       function(err) {
         return res.status(500).json({error: 'ServerError'});
@@ -63,6 +64,28 @@ router.get('/:username', function(req, res, next) {
     if (user) {
       // ei palauteta salasanaa
       return res.status(200).json({username: user.username, name: user.name});
+    }
+    else {
+      return res.status(404).json({error: 'UserNotFound'});
+    }
+  });
+});
+
+router.get('/:username/blogs', function(req, res, next) {
+  
+  var username = req.params['username'];
+  var query = {where: {username: username}};
+  var userID;
+  models.User.findOne(query).then(function(user) {
+    if (user) {
+      userID = user.id;
+      user.getAuthoredBlogs().then(function(blogs) {
+        var data = [];
+        for (var i = 0; i < blogs.length; i++){
+          data.push({ id: blogs[i].id });
+        }
+        return res.status(200).json(data);
+      });
     }
     else {
       return res.status(404).json({error: 'UserNotFound'});

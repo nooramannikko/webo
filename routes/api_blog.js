@@ -14,17 +14,19 @@ router.post('/', function(req, res, next) {
   }
   
   var user = req.user;
+  var newBlog;
   models.Blog.create({
   id: bID, 
   name: blogname
   }).then(function(blog) {
     bID += 1;
-    //blog.addAuthor(user);
-    //user.addAuthoredBlogs(blog);
-    return res.status(201).json({id: blog.id});
+    newBlog = blog;
+    return blog.addAuthor(user.id);
   }, 
   function(err) {
     return res.status(500).json({error: 'ServerError'});
+  }).then(function() {
+    return res.status(201).json({id: newBlog.id});
   });
  
 });
@@ -32,7 +34,7 @@ router.post('/', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
 
   var blogid = req.params['id'];
-  var query = {where: {id: id}};
+  var query = { where: { id: blogid } };
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
       return res.status(200).json({id: blog.id, name: blog.name});
@@ -46,31 +48,33 @@ router.get('/:id', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
   
   var blogid = req.params['id'];
-  if (!id) {
+  if (!blogid) {
     return res.status(404).json({error: 'BlogNotFound'});
   }
 
-  var query = {where: {id: id}};
+  var query = {where: {id: blogid}};
   var blogToDelete;
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
       // Tarkista id:stä, ettei ole oletusblogi
       if (/^([0-9]*)$/.test(blog.id)) {
         blogToDelete = blog;
-        return blog.setAuthors([]); // poista riippuvuudet
+        // poista riippuvuudet
+        blog.setAuthors([]).then(function() {
+          blogToDelete.destroy().then(function() {
+            return res.status(200).json();
+          }, 
+          function(err) {
+            return res.status(500).json({error: 'ServerError'});
+          });
+        }, 
+        function(err) {
+          return res.status(500).json({error: 'ServerError'});
+        }); 
       }
       else {
         return res.status(403).json({error: 'CannotDeleteDefaultBlog'});
       }
-    }
-    else {
-      return res.status(404).json({error: 'BlogNotFound'});
-    }
-  }).then(function() {
-    return blogToDelete.destroy();
-  }).then(function(blog) {
-    if (blog) {
-      return res.status(200).json();
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});

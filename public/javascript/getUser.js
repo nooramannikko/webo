@@ -15,4 +15,20 @@ $(document).ready(function() {
 			},
 		});
 	});
+
+	$("#getauthoredblogs").submit(function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	
+		var username = document.getElementById("getauthoredblogs-username").value;
+		$.ajax({
+			type: "GET",
+			url: 'http://localhost:3000/api/user/' + username + '/blogs',
+			dataType: 'json',
+			statusCode: {
+				200:function(data) { $("#output").html("Blogit: ..."); },
+				404:function() { $("#output").html("Haettua käyttäjää ei löydy"); }
+			},
+		});
+	});
 });
