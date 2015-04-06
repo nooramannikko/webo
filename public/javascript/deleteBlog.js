@@ -6,7 +6,7 @@ function deleteBlog() {
 		dataType: 'json',
 		statusCode: { 
 			200: function() { $("#deleteblogoutput").html("Blogi poistettu")}, 
-			403: function() { $("#deleteblogoutput").html("Oletusblogia ei voida poista")}, 
+			403: function() { $("#deleteblogoutput").html("Oletusblogia ei voida poistaa")}, 
 			404: function() { $("#deleteblogoutput").html("Blogia ei ole olemassa")}
 		}
 	});

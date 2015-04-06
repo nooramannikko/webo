@@ -9,6 +9,7 @@
     <script src="/javascript/getUser.js"></script>
     <script src="/javascript/getBlog.js"></script>
     <script src="/javascript/deleteBlog.js"></script>
+    <script src="/javascript/updateUser.js"></script>
   </head>
   <body>
     <h1 class="tamplr-logo">tamplr</h1>
@@ -46,6 +47,10 @@
       username: <input type="text" id="getuser-username"><br>
       <input type="submit" value="Hae käyttäjä">
     </form><br>
+
+    name: <input id="newname" type="text"><br>
+    password: <input id="newpassword" type="password"><br>
+    <button id="updateuserinfo" onclick="updateUser()">Päivitä käyttäjän tiedot</button>
 
     <p id="output"></p>
 

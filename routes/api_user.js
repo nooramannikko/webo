@@ -71,6 +71,40 @@ router.get('/:username', function(req, res, next) {
   });
 });
 
+router.put('/:username', function(req, res, next) {
+
+  var name = req.body.name;
+  var password = req.body.password;
+  var username = req.params['username'];
+  // Ei tiedetä, onko arvo tyhjä tarkoituksella, joten lasketaan virheeksi
+  if (!name) {
+    return res.status(400).json({error: 'NameEmpty'});
+  }
+  if (!password) {
+    return res.status(400).json({error: 'PasswordEmpty'});
+  }
+
+  var query = {where: {username: username}}; 
+  models.User.findOne(query).then(function(user) {
+    if (user) {
+      // Molemmat tiedot päivitettävä
+      user.updateAttributes({ 
+        name: name, 
+        password: sha256.update(password).digest('base64')
+      }).then(function() {
+        return res.status(200).json();
+      }), 
+      function(err) {
+        return res.status(500).json({error: 'ServerError'});
+      };
+    }
+    else {
+      return res.status(404).json({error: 'UserNotFound'});
+    }
+  });
+
+});
+
 router.get('/:username/blogs', function(req, res, next) {
   
   var username = req.params['username'];
@@ -89,6 +123,20 @@ router.get('/:username/blogs', function(req, res, next) {
     }
     else {
       return res.status(404).json({error: 'UserNotFound'});
+    }
+  });
+});
+
+router.get('/getuser', function(req, res, next) {
+
+// EI TOIMI
+  var user = req.user;
+  models.User.findOne({where: {username: user.username}}).then(function(u) {
+    if (u) {
+      return res.status(200).json({username: u.username});
+    }
+    else {
+      return res.status(500).json({error: 'ServerError'});
     }
   });
 });

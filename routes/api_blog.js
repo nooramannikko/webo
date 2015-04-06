@@ -52,10 +52,39 @@ router.delete('/:id', function(req, res, next) {
     return res.status(404).json({error: 'BlogNotFound'});
   }
 
+  // Hae nykyinen käyttäjä ja käyttäjän blogit
+  var authoredBlogs = [];
+  var currentUser = req.user;
+  // HAKU TUOTTAA 0 BLOGIA, VAIKKA OIKEASTI NIITÄ ON JA TOIMII TIEDOSTOSSA api_user.js
+  /*models.User.findOne({where: {username: currentUser.username}}).then(function(user) {
+    if (user) {
+      currentUser = user;
+      user.getAuthoredBlogs().then(function(blogs) {
+        if (blogs) {
+          for (var i = 0; i < blogs.length; i++) {
+            authoredBlogs.push(blogs[i].id);
+          };
+        }
+      });
+    }
+  });*/
+
   var query = {where: {id: blogid}};
   var blogToDelete;
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
+      // Tarkista, että käyttäjällä on oikeus blogiin
+      // HAKU TUOTTAA TÄSSÄKIN 0 TULOSTA
+      /*var isAuthorized = false;
+      blog.getAuthors({where: {id: currentUser.id}}).then(function(author) {
+        if (author) {
+          isAuthorized = true;
+        }
+      });
+      if (!isAuthorized) {
+        return res.status(401).json({error: 'Unauthorized '});
+      }*/
+
       // Tarkista id:stä, ettei ole oletusblogi
       if (/^([0-9]*)$/.test(blog.id)) {
         blogToDelete = blog;
@@ -65,11 +94,11 @@ router.delete('/:id', function(req, res, next) {
             return res.status(200).json();
           }, 
           function(err) {
-            return res.status(500).json({error: 'ServerError'});
+            return res.status(500).json({error: 'ServerError: Failed to destroy'});
           });
         }, 
         function(err) {
-          return res.status(500).json({error: 'ServerError'});
+          return res.status(500).json({error: 'ServerError: Failed to reset dependencies'});
         }); 
       }
       else {
