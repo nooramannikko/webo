@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Blog = sequelize.define("Blog", {
-    id: DataTypes.STRING, 
+    id: DataTypes.INTEGER, 
     name: DataTypes.STRING
   }, {
     classMethods: {

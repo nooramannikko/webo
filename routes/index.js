@@ -115,13 +115,13 @@ router.post('/login',
 });
 
 router.post('/api/blog*',apiAuth);
-router.put('/api/user/:username',passport.authenticate('basic'));
+router.put('/api/user/:username',apiAuth);
 router.delete('/api/blog/:id',apiAuth);
 /*router.get('/api/user/getuser',apiAuth);*/
-router.use('/api/blog/:id/author/:username',passport.authenticate('basic'));
-router.use('/api/blog/:id/posts',passport.authenticate('basic'));
-router.post('/api/post/:id/comments',passport.authenticate('basic'));
-router.use('/api/user/:username/follows/:id',passport.authenticate('basic'));
-router.use('/api/user/:username/likes/:id',passport.authenticate('basic'));
+router.use('/api/blog/:id/author/:username',apiAuth);
+router.use('/api/blog/:id/posts',apiAuth);
+router.post('/api/post/:id/comments',apiAuth);
+router.use('/api/user/:username/follows/:id',apiAuth);
+router.use('/api/user/:username/likes/:id',apiAuth);
 
 module.exports = router;

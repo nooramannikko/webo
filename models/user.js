@@ -16,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
           constraints: false
         });
         User.hasMany(models.Post, {as: 'AuthoredPosts'});
+        User.hasMany(models.Comment, {as: 'AuthoredComments'});
       }
     }
   });

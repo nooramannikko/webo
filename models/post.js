@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Post = sequelize.define("Post", {
-    id: DataTypes.STRING, 
+    id: DataTypes.INTEGER, 
     title: DataTypes.STRING,
     text: DataTypes.STRING, 
     author: DataTypes.STRING, 
@@ -13,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
         // Tässä voi assosioida malleja toisiinsa
         Post.hasOne(models.Blog, {as: 'BlogPost'});
         Post.hasOne(models.User, {as: 'Author'});
+        Post.hasMany(models.Comment, {as: 'PostComments'});
       }
     }
   });
