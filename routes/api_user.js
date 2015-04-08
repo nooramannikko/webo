@@ -84,6 +84,7 @@ router.put('/:username', function(req, res, next) {
     return res.status(400).json({error: 'PasswordEmpty'});
   }
 
+  var sha256 = crypto.createHash('sha256');
   var query = {where: {username: username}}; 
   models.User.findOne(query).then(function(user) {
     if (user) {
@@ -127,11 +128,11 @@ router.get('/:username/blogs', function(req, res, next) {
   });
 });
 
-router.get('/getuser', function(req, res, next) {
+/*router.get('/getuser', function(req, res, next) {
 
 // EI TOIMI
   var user = req.user;
-  models.User.findOne({where: {username: user.username}}).then(function(u) {
+  models.User.findOne({where: {username: user}}).then(function(u) {
     if (u) {
       return res.status(200).json({username: u.username});
     }
@@ -139,6 +140,6 @@ router.get('/getuser', function(req, res, next) {
       return res.status(500).json({error: 'ServerError'});
     }
   });
-});
+});*/
 
 module.exports = router;

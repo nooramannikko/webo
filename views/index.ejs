@@ -10,6 +10,7 @@
     <script src="/javascript/getBlog.js"></script>
     <script src="/javascript/deleteBlog.js"></script>
     <script src="/javascript/updateUser.js"></script>
+    <script src="/javascript/updateBlog.js"></script>
   </head>
   <body>
     <h1 class="tamplr-logo">tamplr</h1>
@@ -48,6 +49,7 @@
       <input type="submit" value="Hae käyttäjä">
     </form><br>
 
+    username: <input id="usernameinupdate" type="text"><br>
     name: <input id="newname" type="text"><br>
     password: <input id="newpassword" type="password"><br>
     <button id="updateuserinfo" onclick="updateUser()">Päivitä käyttäjän tiedot</button>
@@ -91,7 +93,32 @@
 
     id: <input id="deleteblog-id" type="text"><br>
     <button id="deleteblog" onclick="deleteBlog()">Poista blogi</button><br>
-    <p id="deleteblogoutput"></p>
+    <p id="deleteblogoutput"></p><br>
+
+    username: <input id="usernametoadd" type="text"><br>
+    id: <input id="adduser-blog" type="text"><br>
+    <button id="adduserblog" onclick="addUser()">Lisää kirjoitusoikeus blogiin</button><br>
+
+    username: <input id="usernametoremove" type="text"><br>
+    id: <input id="removeuser-blog" type="text"><br>
+    <button id="removeuserblog" onclick="removeUser()">Poista kirjoitusoikeus blogista</button><br>
+
+    <!-- Blogikirjoitukset -->
+    <form id="newblogpost" method="POST" action="/api/blog">
+      title: <input type="text" name="title"><br>
+      text: <input type="text" name="text"><br>
+      <input type="submit" value="Lisää blogikirjoitus">
+    </form><br>
+
+    <form id="getblogposts" method="GET" action="api/blog">
+      id: <input id="getpost-blogid" type="text"><br>
+      <input type="submit" value="Hae blogin viestit">
+    </form><br>
+
+    <formid="getsinglepost" method="GET" action="/api/post">
+      id: <input id="getpost-postid" type="text"><br>
+      <input type="submit" value="Hae blogikirjoitus">
+    </form><br>
 
   </body>
 </html>

@@ -117,7 +117,7 @@ router.post('/login',
 router.post('/api/blog*',apiAuth);
 router.put('/api/user/:username',passport.authenticate('basic'));
 router.delete('/api/blog/:id',apiAuth);
-router.get('/api/user/getuser',apiAuth);
+/*router.get('/api/user/getuser',apiAuth);*/
 router.use('/api/blog/:id/author/:username',passport.authenticate('basic'));
 router.use('/api/blog/:id/posts',passport.authenticate('basic'));
 router.post('/api/post/:id/comments',passport.authenticate('basic'));
