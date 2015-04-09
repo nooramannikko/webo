@@ -47,4 +47,24 @@ $(document).ready(function() {
 			},
 		});
 	});
+
+	$("#newblogpost").submit(function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+		
+		var id = document.getElementById("new-post-id").value;
+		var data =  $("#newblogpost").serialize();
+		$.ajax({
+			type: "POST",
+			url: 'http://localhost:3000/api/blog/' + id + '/posts',
+			data: data,
+			dataType: 'json',
+			statusCode: {
+				200:function(data) { $("#blogoutput").html("Viesti " + data["id"] +
+				" tallennettu"); },
+				400:function() { $("#blogoutput").html("Tietoja puuttuu"); },
+				404:function(data) { $("#blogoutput").html(data["statusText"]); }
+			},
+		});
+	});
 });
