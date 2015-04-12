@@ -3,6 +3,8 @@ var router = express.Router();
 
 var models = require('../models');
 
+var sequelize = require('../node_modules/sequelize');
+
 var bID = 1; // IDt blogeille
 var pID = 1; // IDt viesteille
 
@@ -17,17 +19,25 @@ router.post('/', function(req, res, next) {
   var user = req.user;
   var newBlog;
   models.Blog.create({
-  id: bID, 
-  name: blogname
+    id: bID, 
+    name: blogname
   }).then(function(blog) {
-    bID += 1;
-    newBlog = blog;
-    return blog.addAuthor(user);
+    if (blog) {
+      bID += 1;
+      newBlog = blog;
+      blog.addAuthor(user.id).then(function() {
+        return res.status(201).json({id: blog.id});
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+    }
+    else {
+      return res.status(500).json({error: 'ServerError'});
+    }
   }, 
   function(err) {
-    return res.status(500).json({error: 'ServerError'});
-  }).then(function() {
-    return res.status(201).json({id: newBlog.id});
+    return res.status(500).json({error: err});
   });
  
 });
@@ -53,79 +63,48 @@ router.delete('/:id', function(req, res, next) {
     return res.status(404).json({error: 'BlogNotFound'});
   }
 
-  // Hae nykyinen käyttäjä ja käyttäjän blogit
-  var authoredBlogs = [];
   var currentUser = req.user;
-  var foundUser = false;
-  var foundBlogs = false;
-  // Erinäiset yritelmät varmistaa käyttäjän käytöoikeus ko. blogiin kommentoitu pois.
-
-  // HAKU TUOTTAA 0 BLOGIA, VAIKKA OIKEASTI NIITÄ ON JA TOIMII TIEDOSTOSSA api_user.js
-  /*models.User.findOne({where: {username: currentUser.username}}).then(function(user) {
-    if (user) {
-      foundUser = user.id;
-      currentUser = user;
-      user.getAuthoredBlogs().then(function(blogs) {
-        foundBlogs = blogs.length;
-        for (var i = 0; i < blogs.length; i++) {
-          authoredBlogs.push(blogs[i].id);
-        };
-      });
-    }
-  });*/
 
   var query = {where: {id: blogid}};
   var blogToDelete;
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
       // Tarkista, että käyttäjällä on oikeus blogiin
-      // HAKU TUOTTAA TÄSSÄKIN 0 TULOSTA
-      /*var isAuthorized = false;
-      for (var j = 0; j < authoredBlogs.length; j++) {
-        if (blog.id == authoredBlogs[j]) {
+      var isAuthorized = false;
+      var numAuthor = 0;
+      var authorNames = currentUser.username;
+      blog.getAuthors({where: {username: currentUser.username}}).then(function(authors) {
+        if (authors) {
           isAuthorized = true;
-          break;
-        }
-      }
-      var foundAuthors = false;
-      blog.getAuthors().then(function(authors) {
-        foundAuthors = authors.length;
-        for (var j = 0; j < authors.length; j++) {
-          if (authors[j].id == foundUser) {
-            isAuthorized;
-            break;
+          //return res.status(401).json({error: 'Authors ' + isAuthorized});
+          // Tarkista id:stä, ettei ole oletusblogi
+          if (/^([0-9]*)$/.test(blog.id)) {
+            blogToDelete = blog;
+            // poista riippuvuudet
+            // TODO: Huomioi viestien poisto myös
+            blog.setAuthors([]).then(function() {
+              blogToDelete.destroy().then(function() {
+                return res.status(200).json();
+              }, 
+              function(err) {
+                return res.status(500).json({error: err});
+              });
+            }, 
+            function(err) {
+              return res.status(500).json({error: err});
+            }); 
+          }
+          else {
+            return res.status(403).json({error: 'CannotDeleteDefaultBlog'});
           }
         }
-      })
-      blog.getAuthors({where: {id: currentUser.id}}).then(function(author) {
-        if (author) {
-          isAuthorized = true;
+        else {
+          return res.status(500).json({error: 'NoAuthors'});
         }
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
       });
-      if (!isAuthorized) {
-        return res.status(401).json({error: 'Unauthorized ' + blog.id + ' ' + foundUser + ' ' + foundAuthors});
-      }*/
-
-      // Tarkista id:stä, ettei ole oletusblogi
-      if (/^([0-9]*)$/.test(blog.id)) {
-        blogToDelete = blog;
-        // poista riippuvuudet
-        // TODO: Huomioi viestien poisto myös
-        blog.setAuthors([]).then(function() {
-          blogToDelete.destroy().then(function() {
-            return res.status(200).json();
-          }, 
-          function(err) {
-            return res.status(500).json({error: 'ServerError: Failed to destroy'});
-          });
-        }, 
-        function(err) {
-          return res.status(500).json({error: 'ServerError: Failed to reset dependencies'});
-        }); 
-      }
-      else {
-        return res.status(403).json({error: 'CannotDeleteDefaultBlog'});
-      }
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});
@@ -137,25 +116,41 @@ router.put('/:id/author/:username', function(req, res, next) {
 
   var username = req.params['username'];
   var id = req.params['id'];
+  var user = req.user;
 
   var query = {where: {id: id}};
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
-      // TODO: Tarkista, että nykyisellä käyttäjällä on kirjoitusoikeus tähän blogiin
-
-      // Tarkista, ettei oletusblogi
-      if (!/^([0-9]*)$/.test(id)) {
-        return res.status(403).json({error: 'CannotModifyDefaultBlog'});
-      }
-
-      models.User.findOne({where: {username: username}}).then(function(user) {
-        if (user) {
-          blog.addAuthor(user);
-          return res.status(200).json();
+      // Tarkista, että nykyisellä käyttäjällä on kirjoitusoikeus tähän blogiin
+      blog.getAuthors({where: {username: user.username}}).then(function(authors){
+        if (authors) {
+          //Tarkista, ettei oletusblogi
+          if (!/^([0-9]*)$/.test(id)) {
+            return res.status(403).json({error: 'CannotModifyDefaultBlog'});
+          }
+          models.User.findOne({where: {username: username}}).then(function(usr) {
+            if (usr) {
+              blog.addAuthor(usr.id).then(function() {
+                return res.status(200).json();
+              }, 
+              function(err) { 
+                return res.status(500).json({error: err});
+              });
+            }
+            else {
+              return res.status(404).json({error: 'UserNotFound'});
+            }
+          }, 
+          function(err) {
+            return res.status(500).json({error: err});
+          });
         }
         else {
-          return res.status(404).json({error: 'UserNotFound'});
+          return res.status(401).json({error: 'Unauthorized'});
         }
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
       });
     }
     else {
@@ -169,25 +164,41 @@ router.delete('/:id/author/:username', function(req, res, next) {
 
   var username = req.params['username'];
   var id = req.params['id'];
+  var user = req.user;
 
   var query = {where: {id: id}};
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
-      // TODO: Tarkista, että nykyisellä käyttäjällä on kirjoitusoikeus tähän blogiin
-
-      // Tarkista, ettei oletusblogi
-      if (!/^([0-9]*)$/.test(id)) {
-        return res.status(403).json({error: 'CannotModifyDefaultBlog'});
-      }
-
-      models.User.findOne({where: {username: username}}).then(function(user) {
-        if (user) {
-          blog.removeAuthor(user);
-          return res.status(200).json();
+      // Tarkista, että nykyisellä käyttäjällä on kirjoitusoikeus tähän blogiin
+      blog.getAuthors({where: {username: user.username}}).then(function(authors) {
+        if (authors) {
+          // Tarkista, ettei oletusblogi
+          if (!/^([0-9]*)$/.test(id)) {
+            return res.status(403).json({error: 'CannotDeleteDefaultBlog'});
+          }
+          models.User.findOne({where: {username: username}}).then(function(usr) {
+            if (usr) {
+              blog.removeAuthor(usr.id).then(function() {
+                return res.status(200).json();
+              }, 
+              function(err) {
+                return res.status(500).json({error: err});
+              });
+            }
+            else {
+              return res.status(404).json({error: 'UserNotFound'});
+            }
+          }, 
+          function(err) {
+            return res.status(500).json({error: err});
+          });
         }
         else {
-          return res.status(404).json({error: 'UserNotFound'});
+          return res.status(401).json({error: 'Unauthorized'});
         }
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
       });
     }
     else {
@@ -224,11 +235,24 @@ router.post('/:id/posts', function(req, res, next) {
           author: user.username,
           likes: 0
           }).then(function(post) {
-            pID += 1;
-            // Luo yhteydet
-            user.addAuthoredPost(post);
-            blog.addBlogPost(post);
-            return res.status(201).json({id: post.id});
+            if (post) {
+              pID += 1;
+              // Luo yhteydet
+              blog.addBlogPost(post).then(function() {
+                user.addAuthoredPost(post).then(function() {
+                  return res.status(201).json({id: post.id});
+                }, 
+                function(err) {
+                  return res.status(500).json({error: '1' + err}); // Numerot testausta varten
+                });
+              }, 
+              function(err) {
+                return res.status(500).json({error: '2' + err});
+              });
+            }
+            else {
+              return res.status(500).json({error: 'ServerError'});
+            }
           }, 
           function(err) {
             return res.status(500).json({error: 'ServerError'});
@@ -237,11 +261,17 @@ router.post('/:id/posts', function(req, res, next) {
         else {
           return res.status(401).json({error: 'Unauthorized'});
         }
+      }, 
+      function(err) {
+        return res.status(500).json({error: '3' + err});
       }); 
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});
     }
+  }, 
+  function(err) {
+    return res.status(500).json({error: '4' + err});
   });
 });
 
@@ -252,7 +282,7 @@ router.get('/:id/posts', function(req, res, next) {
     if (blog) {
       // Hae 10 uusinta viestiä
       blog.getBlogPosts({limit: 10, order: 'createdAt DESC'}).then(function(posts) {
-        var data = []
+        var data = [];
         for (var i = posts.length-1; i >= 0; i--) {
           data.push({
             id: posts[i].id, 
@@ -261,13 +291,20 @@ router.get('/:id/posts', function(req, res, next) {
             author: posts[i].author
           });
         }
+        return res.status(200).json(data);
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
       });
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});
     }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
   });
 
-})
+});
 
 module.exports = router;

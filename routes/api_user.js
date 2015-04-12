@@ -76,6 +76,11 @@ router.put('/:username', function(req, res, next) {
   var name = req.body.name;
   var password = req.body.password;
   var username = req.params['username'];
+
+  if (username !== req.user.username) {
+    return res.status(401).json({error: 'Unauthorized'});
+  }
+
   // Ei tiedetä, onko arvo tyhjä tarkoituksella, joten lasketaan virheeksi
   if (!name) {
     return res.status(400).json({error: 'NameEmpty'});

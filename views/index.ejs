@@ -8,6 +8,7 @@
     <script src="http://malsup.github.com/jquery.form.js"></script>
     <script src="/javascript/getUser.js"></script>
     <script src="/javascript/getBlog.js"></script>
+    <script src="/javascript/getPost.js"></script>
     <script src="/javascript/deleteBlog.js"></script>
     <script src="/javascript/updateUser.js"></script>
     <script src="/javascript/updateBlog.js"></script>
@@ -97,29 +98,31 @@
 
     username: <input id="usernametoadd" type="text"><br>
     id: <input id="adduser-blog" type="text"><br>
-    <button id="adduserblog" onclick="addUser()">Lisää kirjoitusoikeus blogiin</button><br>
+    <button id="adduserblog" onclick="addUser()">Lisää kirjoitusoikeus blogiin</button><br><br>
 
     username: <input id="usernametoremove" type="text"><br>
     id: <input id="removeuser-blog" type="text"><br>
-    <button id="removeuserblog" onclick="removeUser()">Poista kirjoitusoikeus blogista</button><br>
+    <button id="removeuserblog" onclick="removeUser()">Poista kirjoitusoikeus blogista</button><br><br>
 
     <!-- Blogikirjoitukset -->
     <form id="newblogpost" method="POST" action="/api/blog">
       id (urlista): <input type="text" id="new-post-id" name="id"><br>
       title: <input type="text" name="title"><br>
       text: <input type="text" name="text"><br>
-      <input type="submit" value="Lisää blogikirjoitus">
+      <input type="submit" value="Lisää blogikirjoitus"><br>
     </form><br>
 
     <form id="getblogposts" method="GET" action="api/blog">
       id: <input id="getpost-blogid" type="text"><br>
-      <input type="submit" value="Hae blogin viestit">
+      <input type="submit" value="Hae blogin viestit"><br>
     </form><br>
 
-    <formid="getsinglepost" method="GET" action="/api/post">
+    <form id="getsinglepost" method="GET" action="/api/post">
       id: <input id="getpost-postid" type="text"><br>
-      <input type="submit" value="Hae blogikirjoitus">
+      <input type="submit" value="Hae blogikirjoitus"><br>
     </form><br>
+
+    <p id="postoutput"></p>
 
   </body>
 </html>

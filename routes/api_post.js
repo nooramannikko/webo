@@ -19,6 +19,9 @@ router.get('/:id', function(req, res, next) {
 		else {
 			return res.status(404).json({error: 'PostNotFound'});
 		}
+	}, 
+	function(err) {
+		return res.status(500).json({error: err});
 	});
 });
 
