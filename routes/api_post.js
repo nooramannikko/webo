@@ -12,11 +12,16 @@ router.get('/:id', function(req, res, next) {
 	var query = {where: {id: id}};
 	models.Post.findOne(query).then(function(post) {
 		if (post) {
-			return res.status(200).json({
-				title: post.title, 
-				text: post.text, 
-				author: post.author, 
-				likes: post.likes // TODO: Hae määrä tietokannasta
+			post.getPostLikes().then(function(likes) {
+				return res.status(200).json({
+					title: post.title, 
+					text: post.text, 
+					author: post.author, 
+					likes: likes.length
+				});
+			}, 
+			function(err) {
+				return res.status(500).json({error: err});
 			});
 		}
 		else {

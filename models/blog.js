@@ -18,6 +18,11 @@ module.exports = function(sequelize, DataTypes) {
           onDelete: 'cascade', 
           hooks: true
         });
+        Blog.hasMany(models.Follow, {
+          as: 'BlogFollowers', 
+          onDelete: 'cascade', 
+          hooks: true
+        });
       }
     }
   });

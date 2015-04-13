@@ -79,7 +79,6 @@ router.delete('/:id', function(req, res, next) {
       blog.getAuthors({where: {username: currentUser.username}}).then(function(authors) {
         if (authors) {
           isAuthorized = true;
-          //return res.status(401).json({error: 'Authors ' + isAuthorized});
           // Tarkista id:stä, ettei ole oletusblogi
           if (/^([0-9]*)$/.test(blog.id)) {
             blogToDelete = blog;
@@ -254,8 +253,7 @@ router.post('/:id/posts', function(req, res, next) {
           id: pID, 
           title: title,
           text: text,
-          author: author[0].username,
-          likes: 0
+          author: author[0].username
           }).then(function(post) {
             if (post) {
               pID += 1;
@@ -328,6 +326,33 @@ router.get('/:id/posts', function(req, res, next) {
     return res.status(500).json({error: err});
   });
 
+});
+
+// Hae blogin seuraajat
+router.get('/:id/followers', function(req, res, next) {
+
+  var id = req.params['id'];
+
+  models.Blog.findOne({where: {id: id}}).then(function(blog) {
+    if (blog) {
+      blog.getBlogFollowers().then(function(followers) {
+        var data = [];
+        for (var i = 0; i < followers.length; i++) {
+          data.push({username: followers[i].username});
+        }
+        return res.status(200).json(data);
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+    }
+    else {
+      return res.status(404).json({error: 'BlogNotFound'});
+    }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
+  });
 });
 
 module.exports = router;
