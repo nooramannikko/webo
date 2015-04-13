@@ -245,6 +245,145 @@ router.delete('/:username/likes/:id', function(req, res, next) {
   });
 });
 
+// Seuraa blogia
+router.put('/:username/follows/:id', function(req, res, next) {
+
+  var username = req.params['username'];
+  var id = req.params['id'];
+  var currentUser = req.user;
+
+  models.User.findOne({where: {username: username}}).then(function(user) {
+    if (user) {
+      // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
+      if (currentUser.username !== username) {
+        return res.status(401).json({error: 'Unauthorized'});
+      }
+      models.Blog.findOne({where: {id: id}}).then(function(blog) {
+        if (blog) {
+          // Luo seuraamisobjekti
+          models.Follow.create({
+            username: username, 
+            id: blog.id
+          }).then(function(follow) {
+            if (follow) {
+              // Luo yhteys
+              blog.addBlogFollower(follow).then(function() {
+                return res.status(200).json();
+              }, 
+              function(err) {
+                return res.status(500).json({error: err});
+              });
+            }
+            else {
+              return res.status(500).json({error: 'ServerError'});
+            }
+          }, 
+          function(err) {
+            return res.status(500).json({error: err});
+          });
+        }
+        else {
+          return res.status(404).json({error: 'BlogNotFound'});
+        }
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+    }
+    else {
+      return res.status(404).json({error: 'UserNotFound'});
+    }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
+  });
+});
+
+// Peru blogin seuraaminen
+router.delete('/:username/follows/:id', function(req, res, next) {
+
+  var username = req.params['username'];
+  var id = req.params['id'];
+  var currentUser = req.user;
+
+  models.User.findOne({where: {username: username}}).then(function(user) {
+    if (user) {
+      // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
+      if (currentUser.username !== username) {
+        return res.status(401).json({error: 'Unauthorized'});
+      }
+      models.Blog.findOne({where: {id: id}}).then(function(blog) {
+        if (blog) {
+          // Etsi tykkäysobjekti
+          var query = {where: {username: username, id: blog.id}};
+          models.Follow.findOne(query).then(function(follow) {
+            if (follow) {
+              // Poista seuraaminen blogista
+              blog.removeBlowFollower(follow).then(function() {
+                // Poista tykkäysobjekti
+                follow.destroy().then(function() {
+                  return res.status(200).json();
+                }, 
+                function(err) {
+                  return res.status(500).json({error: err});
+                });
+              }, 
+              function(err) {
+                return res.status(500).json({error: err});
+              });
+            }
+            else {
+              return res.status(500).json({error: 'ServerError'});
+            }
+          }, 
+          function(err) {
+            return res.status(500).json({error: err});
+          });
+        }
+        else {
+          return res.status(404).json({error: 'BlogNotFound'});
+        }
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+    }
+    else {
+      return res.status(404).json({error: 'UserNotFound'});
+    }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
+  });
+});
+
+// Hae käyttäjän seuraamat blogit
+router.get('/:username/follows', function(req, res, next) {
+
+  var username = req.params['username'];
+
+  models.User.findOne({where: {username: username}}).then(function(user) {
+    if (user) {
+      models.Follow.findAll({where: {username: username}}).then(function(follows) {
+        var data = [];
+        for (var i = 0; i < follows.length; i++) {
+          data.push({id: follows[i].id});
+        }
+        return res.status(200).json(data);
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+    }
+    else {
+      return res.status(404).json({error: 'UserNotFound'});
+    }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
+  });
+});
+
 /*router.get('/getuser', function(req, res, next) {
 
 // EI TOIMI
