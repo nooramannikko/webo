@@ -9,8 +9,10 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // Tässä voi assosioida malleja toisiinsa
-        Comment.hasOne(models.Post, {as: 'PostComment'});
-        Comment.hasOne(models.User, {as: 'Author'});
+        //Comment.belongsTo(models.Post, {as: 'PostComment'});
+        Comment.belongsTo(models.User, {
+          as: 'Author'
+        });
       }
     }
   });

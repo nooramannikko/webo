@@ -9,6 +9,7 @@
     <script src="/javascript/getUser.js"></script>
     <script src="/javascript/getBlog.js"></script>
     <script src="/javascript/getPost.js"></script>
+    <script src="/javascript/getpostComment.js"></script>
     <script src="/javascript/deleteBlog.js"></script>
     <script src="/javascript/updateUser.js"></script>
     <script src="/javascript/updateBlog.js"></script>
@@ -123,6 +124,19 @@
       <input type="submit" value="Hae blogikirjoitus"><br>
     </form><br>
 
+    <!-- Kommentit -->
+    <form id="newcomment" method="POST" action="/api/post">
+      id (urlista): <input type="text" id="new-comment-id" name="id"><br>
+      text: <input type="text" name="text"><br>
+      <input type="submit" value="Lisää kommentti"><br>
+    </form><br>
+
+    <form id="getpostcomments" method="POST" action="/api/post">
+      id (urlista): <input type="text" id="getcomments-id" name="id"><br>
+      <input type="submit" value="Hae blogikirjoituksen kommentit"><br>
+    </form><br>
+
+    <!-- Kirjoitusoikeudet -->
     username: <input id="username-addlike" type="text"><br>
     blogpost id: <input id="postid-addlike" type="text"><br>
     <button id="likepost" onclick="addLike()">Tykkää blogikirjoituksesta</button><br><br>
