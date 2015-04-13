@@ -9,6 +9,7 @@ var bID = 1; // IDt blogeille
 var pID = 1; // IDt viesteille
 
 
+// Luo blogi
 router.post('/', function(req, res, next) {
 
   var blogname = req.body.blogname;
@@ -42,6 +43,7 @@ router.post('/', function(req, res, next) {
  
 });
 
+// Hae blogin tiedot
 router.get('/:id', function(req, res, next) {
 
   var blogid = req.params['id'];
@@ -56,6 +58,7 @@ router.get('/:id', function(req, res, next) {
   });
 });
 
+// Poista blogi
 router.delete('/:id', function(req, res, next) {
   
   var blogid = req.params['id'];
@@ -81,14 +84,30 @@ router.delete('/:id', function(req, res, next) {
           if (/^([0-9]*)$/.test(blog.id)) {
             blogToDelete = blog;
             // poista riippuvuudet
-            // TODO: Huomioi viestien poisto myös
+            // TODO: Huomioi viestien yms. poisto myös (ei toimi tällä)
             blog.setAuthors([]).then(function() {
-              blogToDelete.destroy().then(function() {
-                return res.status(200).json();
+              blog.getBlogPosts().then(function(posts) {
+                currentUser.removeAuthoredPosts(posts).then(function() {
+                  blog.destroy().then(function() {
+                    return res.status(200).json();
+                  }, 
+                  function(err) {
+                    return res.status(500).json({error: err});
+                  });
+                }, 
+                function(err) {
+                  return res.status(500).json({error: err});
+                });
               }, 
               function(err) {
                 return res.status(500).json({error: err});
               });
+              /*blogToDelete.destroy().then(function() {
+                return res.status(200).json();
+              }, 
+              function(err) {
+                return res.status(500).json({error: err});
+              });*/
             }, 
             function(err) {
               return res.status(500).json({error: err});
@@ -112,6 +131,7 @@ router.delete('/:id', function(req, res, next) {
   });
 });
 
+// Lisää kirjoitusoikeus blogiin
 router.put('/:id/author/:username', function(req, res, next) {
 
   var username = req.params['username'];
@@ -160,6 +180,7 @@ router.put('/:id/author/:username', function(req, res, next) {
 
 });
 
+// Poista kirjoitusoikeis blogista
 router.delete('/:id/author/:username', function(req, res, next) {
 
   var username = req.params['username'];
@@ -208,6 +229,7 @@ router.delete('/:id/author/:username', function(req, res, next) {
 
 });
 
+// Luo blogikirjoitus
 router.post('/:id/posts', function(req, res, next) {
 
   var id = req.params['id'];
@@ -232,14 +254,14 @@ router.post('/:id/posts', function(req, res, next) {
           id: pID, 
           title: title,
           text: text,
-          author: user.username,
+          author: author[0].username,
           likes: 0
           }).then(function(post) {
             if (post) {
               pID += 1;
               // Luo yhteydet
               blog.addBlogPost(post).then(function() {
-                user.addAuthoredPost(post).then(function() {
+                author[0].addAuthoredPost(post).then(function() {
                   return res.status(201).json({id: post.id});
                 }, 
                 function(err) {
@@ -275,6 +297,7 @@ router.post('/:id/posts', function(req, res, next) {
   });
 });
 
+// Hae blogin viestit
 router.get('/:id/posts', function(req, res, next) {
 
   var id = req.params['id'];

@@ -13,7 +13,11 @@ module.exports = function(sequelize, DataTypes) {
           through: 'BlogAuthors', 
           constraints: false
         });
-        Blog.hasMany(models.Post, {as: 'BlogPosts'});
+        Blog.hasMany(models.Post, {
+          as: 'BlogPosts', 
+          onDelete: 'cascade', 
+          hooks: true
+        });
       }
     }
   });

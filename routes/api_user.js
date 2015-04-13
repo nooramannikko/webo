@@ -8,6 +8,7 @@ var crypto = require('crypto');
 var uID = 1; // user id
 
 
+// Luo käyttäjä
 router.post('/', function(req, res, next) {
 
   var username = req.body.username;
@@ -56,6 +57,7 @@ router.post('/', function(req, res, next) {
  
 });
 
+// Hae käyttäjän tiedot
 router.get('/:username', function(req, res, next) {
 
   var username = req.params['username'];
@@ -71,6 +73,7 @@ router.get('/:username', function(req, res, next) {
   });
 });
 
+// Päivitä käyttäjän tiedot
 router.put('/:username', function(req, res, next) {
 
   var name = req.body.name;
@@ -111,6 +114,7 @@ router.put('/:username', function(req, res, next) {
 
 });
 
+// Hae käyttäjän blogit
 router.get('/:username/blogs', function(req, res, next) {
   
   var username = req.params['username'];
@@ -130,6 +134,114 @@ router.get('/:username/blogs', function(req, res, next) {
     else {
       return res.status(404).json({error: 'UserNotFound'});
     }
+  });
+});
+
+// Lisää tykkäys
+router.put('/:username/likes/:id', function(req, res, next) {
+
+  var username = req.params['username'];
+  var id = req.params['id'];
+  var currentUser = req.user;
+
+  models.User.findOne({where: {username: username}}).then(function(user) {
+    if (user) {
+      // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
+      if (currentUser.username !== username) {
+        return res.status(401).json({error: 'Unauthorized'});
+      }
+      models.Post.findOne({where: {id: id}}).then(function(post) {
+        if (post) {
+          // Luo tykkäysobjekti
+          models.Like.create({
+            username: username, 
+            id: post.id
+          }).then(function(like) {
+            // Lisää tykkkäys blogikirjoitukseen
+            post.addPostLike(like).then(function() {
+              return res.status(200).json();
+            }, 
+            function(err) {
+              return res.status(500).json({error: err});
+            });
+          }, 
+          function(err) {
+            return res.status(500).json({error: err});
+          });
+        }
+        else {
+          return res.status(404).json({error: 'PostNotFound'});
+        }
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+    }
+    else {
+      return res.status(404).json({error: 'UserNotFound'});
+    }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
+  });
+
+});
+
+// Poista tykkäys
+router.delete('/:username/likes/:id', function(req, res, next) {
+
+  var username = req.params['username'];
+  var id = req.params['id'];
+  var currentUser = req.user;
+
+  models.User.findOne({where: {username: username}}).then(function(user) {
+    if (user) {
+      // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
+      if (currentUser.username !== username) {
+        return res.status(401).json({error: 'Unauthorized'});
+      }
+      models.Post.findOne({where: {id: id}}).then(function(post) {
+        if (post) {
+          // Etsi tykkäysobjekti
+          var query = {where: {username: username, id: post.id}};
+          models.Like.findOne(query).then(function(like) {
+            if (like) {
+              // Poista tykkäys kirjoituksesta
+              post.removePostLike(like).then(function() {
+                // Poista tykkäysobjekti
+                like.destroy().then(function() {
+                  return res.status(200).json();
+                }, 
+                function(err) {
+                  return res.status(500).json({error: err});
+                });
+              }, 
+              function(err) {
+                return res.status(500).json({error: err});
+              });
+            }
+            else {
+              return res.status(500).json({error: 'ServerError'});
+            }
+          }, 
+          function(err) {
+            return res.status(500).json({error: err});
+          });
+        }
+        else {
+          return res.status(404).json({error: 'PostNotFound'});
+        }
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+    }
+    else {
+      return res.status(404).json({error: 'UserNotFound'});
+    }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
   });
 });
 

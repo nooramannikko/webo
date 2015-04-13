@@ -3,6 +3,7 @@ var router = express.Router();
 
 var models = require('../models');
 
+// Hae blogikirjoituksen tiedot
 router.get('/:id', function(req, res, next) {
 
 	var id = req.params['id'];
@@ -13,7 +14,7 @@ router.get('/:id', function(req, res, next) {
 				title: post.title, 
 				text: post.text, 
 				author: post.author, 
-				likes: post.likes
+				likes: post.likes // TODO: Hae määrä tietokannasta
 			});
 		}
 		else {

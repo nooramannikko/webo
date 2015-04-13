@@ -12,6 +12,7 @@
     <script src="/javascript/deleteBlog.js"></script>
     <script src="/javascript/updateUser.js"></script>
     <script src="/javascript/updateBlog.js"></script>
+    <script src="/javascript/manageLikes.js"></script>
   </head>
   <body>
     <h1 class="tamplr-logo">tamplr</h1>
@@ -121,6 +122,14 @@
       id: <input id="getpost-postid" type="text"><br>
       <input type="submit" value="Hae blogikirjoitus"><br>
     </form><br>
+
+    username: <input id="username-addlike" type="text"><br>
+    blogpost id: <input id="postid-addlike" type="text"><br>
+    <button id="likepost" onclick="addLike()">Tykkää blogikirjoituksesta</button><br><br>
+
+    username: <input id="username-removelike" type="text"><br>
+    blogpost id: <input id="postid-removelike" type="text"><br>
+    <button id="dislikepost" onclick="removeLike()">Poista tykkäys blogikirjoituksesta</button><br><br>
 
     <p id="postoutput"></p>
 
