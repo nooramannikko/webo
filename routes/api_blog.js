@@ -12,7 +12,7 @@ var pID = 1; // IDt viesteille
 // Luo blogi
 router.post('/', function(req, res, next) {
 
-  var blogname = req.body.blogname;
+  var blogname = req.body.name;
   if (!blogname) {
     return res.status(400).json({error: 'MissingBlogName'});
   }

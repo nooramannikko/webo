@@ -11,11 +11,16 @@ var uID = 1; // user id
 // Luo käyttäjä
 router.post('/', function(req, res, next) {
 
-  var username = req.body.username;
-  var usernameRegex = /^([a-z][a-z0-9_]*)$/.test(username);
-  var name = req.body.name;
-  var sha256 = crypto.createHash('sha256');
-  var password = sha256.update(req.body.password).digest('base64');
+  try {
+    var username = req.body.username;
+    var usernameRegex = /^([a-z][a-z0-9_]*)$/.test(username);
+    var name = req.body.name;
+    var sha256 = crypto.createHash('sha256');
+    var password = sha256.update(req.body.password).digest('base64');
+  } catch (err) {
+    return res.status(400).json({error: 'InvalidFields'});
+  }
+
   if (!username || !usernameRegex) {
     return res.status(400).json({error: 'InvalidUserName'});
   }
@@ -85,11 +90,8 @@ router.put('/:username', function(req, res, next) {
   }
 
   // Ei tiedetä, onko arvo tyhjä tarkoituksella, joten lasketaan virheeksi
-  if (!name) {
-    return res.status(400).json({error: 'NameEmpty'});
-  }
-  if (!password) {
-    return res.status(400).json({error: 'PasswordEmpty'});
+  if (!name && !password) {
+    return res.status(400).json({error: 'NotGivenNewInformation'});
   }
 
   var sha256 = crypto.createHash('sha256');
@@ -97,15 +99,34 @@ router.put('/:username', function(req, res, next) {
   models.User.findOne(query).then(function(user) {
     if (user) {
       // Molemmat tiedot päivitettävä
-      user.updateAttributes({ 
-        name: name, 
-        password: sha256.update(password).digest('base64')
-      }).then(function() {
-        return res.status(200).json();
-      }), 
-      function(err) {
-        return res.status(500).json({error: 'ServerError'});
-      };
+      if(!password) {
+        user.updateAttributes({ 
+          name: name
+        }).then(function() {
+         return res.status(200).json();
+        }), function(err) {
+         return res.status(500).json({error: 'ServerError'});
+        };
+      }
+      else if(!name) {
+        user.updateAttributes({ 
+          password: sha256.update(password).digest('base64')
+        }).then(function() {
+          return res.status(200).json();
+        }), function(err) {
+          return res.status(500).json({error: 'ServerError'});
+        };
+      }
+      else {
+        user.updateAttributes({ 
+          name: name, 
+          password: sha256.update(password).digest('base64')
+        }).then(function() {
+          return res.status(200).json();
+        }), function(err) {
+          return res.status(500).json({error: 'ServerError'});
+        };
+      }
     }
     else {
       return res.status(404).json({error: 'UserNotFound'});
