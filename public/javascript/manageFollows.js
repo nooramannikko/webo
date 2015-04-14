@@ -20,13 +20,13 @@ $(document).ready(function() {
 		e.preventDefault();
 		e.returnValue = false;
 	
-		var username = document.getElementById("username-removefollow").value;
+		var username = document.getElementById("getfollows-username").value;
 		$.ajax({
 			type: "GET",
 			url: 'http://localhost:3000/api/user/' + username + '/follows',
 			dataType: 'json',
 			statusCode: {
-				200:function(data) { $("#followoutput").html("Blogin haettu"); },
+				200:function(data) { $("#followoutput").html("Blogit haettu"); },
 				404:function() { $("#followoutput").html("Haettua käyttäjää ei löydy"); }
 			},
 		});

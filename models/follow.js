@@ -2,8 +2,8 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Follow = sequelize.define("Follow", {
+    id: DataTypes.INTEGER, 
     username: DataTypes.STRING, // seuraaja
-    id: DataTypes.INTEGER // blogin id
   }, {
     classMethods: {
       associate: function(models) {

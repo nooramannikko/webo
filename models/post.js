@@ -11,9 +11,9 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         // Tässä voi assosioida malleja toisiinsa
         //Post.hasOne(models.Blog, {as: 'Blog'});
-        Post.belongsTo(models.User, {
+        /*Post.belongsTo(models.User, {
           as: 'Author'
-        });
+        });*/
         Post.hasMany(models.Comment, {
           as: 'PostComments',
           onDelete: 'cascade',

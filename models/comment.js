@@ -4,15 +4,16 @@ module.exports = function(sequelize, DataTypes) {
   var Comment = sequelize.define("Comment", {
     id: DataTypes.INTEGER,
     text: DataTypes.STRING, 
-    author: DataTypes.STRING
+    author: DataTypes.STRING, 
+    blogid: DataTypes.STRING, // blogin id
   }, {
     classMethods: {
       associate: function(models) {
         // Tässä voi assosioida malleja toisiinsa
         //Comment.belongsTo(models.Post, {as: 'PostComment'});
-        Comment.belongsTo(models.User, {
+        /*Comment.belongsTo(models.User, {
           as: 'Author'
-        });
+        });*/
       }
     }
   });

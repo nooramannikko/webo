@@ -69,7 +69,6 @@ router.delete('/:id', function(req, res, next) {
   var currentUser = req.user;
 
   var query = {where: {id: blogid}};
-  var blogToDelete;
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
       // Tarkista, että käyttäjällä on oikeus blogiin
@@ -81,14 +80,27 @@ router.delete('/:id', function(req, res, next) {
           isAuthorized = true;
           // Tarkista id:stä, ettei ole oletusblogi
           if (/^([0-9]*)$/.test(blog.id)) {
-            blogToDelete = blog;
             // poista riippuvuudet
-            // TODO: Huomioi viestien yms. poisto myös (ei toimi tällä)
             blog.setAuthors([]).then(function() {
-              blog.getBlogPosts().then(function(posts) {
-                currentUser.removeAuthoredPosts(posts).then(function() {
-                  blog.destroy().then(function() {
-                    return res.status(200).json();
+              // Poista kommentit 
+              models.Comment.destroy({where: {blogid: blog.id}}).then(function() {
+                // Poista tykkäykset
+                models.Like.destroy({where: {blogid: blog.id}}).then(function() {
+                  // Poista viestit
+                  models.Post.destroy({where: {blogid: blog.id}}).then(function() {
+                    // Poista seuraamiset
+                    models.Follow.destroy({where: {blogid: blog.id}}).then(function() {
+                      // Poista blogi
+                      blog.destroy().then(function() {
+                        return res.status(200).json();
+                      }, 
+                      function(err) {
+                        return res.status(500).json({error: err});
+                      });
+                    }, 
+                    function(err) {
+                      return res.status(500).json({error: err});
+                    });
                   }, 
                   function(err) {
                     return res.status(500).json({error: err});
@@ -101,15 +113,9 @@ router.delete('/:id', function(req, res, next) {
               function(err) {
                 return res.status(500).json({error: err});
               });
-              /*blogToDelete.destroy().then(function() {
-                return res.status(200).json();
-              }, 
-              function(err) {
-                return res.status(500).json({error: err});
-              });*/
             }, 
             function(err) {
-              return res.status(500).json({error: err});
+              return res.status(500).json({error: '2' + err});
             }); 
           }
           else {
@@ -165,7 +171,7 @@ router.put('/:id/author/:username', function(req, res, next) {
           });
         }
         else {
-          return res.status(401).json({error: 'Unauthorized'});
+          return res.status(403).json({error: 'Forbidden'});
         }
       }, 
       function(err) {
@@ -214,7 +220,7 @@ router.delete('/:id/author/:username', function(req, res, next) {
           });
         }
         else {
-          return res.status(401).json({error: 'Unauthorized'});
+          return res.status(403).json({error: 'Forbidden'});
         }
       }, 
       function(err) {
@@ -259,12 +265,13 @@ router.post('/:id/posts', function(req, res, next) {
               pID += 1;
               // Luo yhteydet
               blog.addBlogPost(post).then(function() {
-                author[0].addAuthoredPost(post).then(function() {
+                return res.status(201).json({id: post.id});
+                /*author[0].addAuthoredPost(post).then(function() {
                   return res.status(201).json({id: post.id});
                 }, 
                 function(err) {
                   return res.status(500).json({error: '1' + err}); // Numerot testausta varten
-                });
+                });*/
               }, 
               function(err) {
                 return res.status(500).json({error: '2' + err});
@@ -279,7 +286,7 @@ router.post('/:id/posts', function(req, res, next) {
           });
         }
         else {
-          return res.status(401).json({error: 'Unauthorized'});
+          return res.status(403).json({error: 'Forbidden'});
         }
       }, 
       function(err) {

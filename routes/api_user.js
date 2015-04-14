@@ -6,6 +6,8 @@ var models = require('../models');
 var crypto = require('crypto');
 
 var uID = 1; // user id
+var fID = 1; // seuraamisen id
+var lID = 1; // tykkäämisen id
 
 
 // Luo käyttäjä
@@ -169,29 +171,43 @@ router.put('/:username/likes/:id', function(req, res, next) {
     if (user) {
       // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
       if (currentUser.username !== username) {
-        return res.status(401).json({error: 'Unauthorized'});
+        return res.status(403).json({error: 'Forbidden'});
       }
-      models.Post.findOne({where: {id: id}}).then(function(post) {
-        if (post) {
-          // Luo tykkäysobjekti
-          models.Like.create({
-            username: username, 
-            id: post.id
-          }).then(function(like) {
-            // Lisää tykkkäys blogikirjoitukseen
-            post.addPostLike(like).then(function() {
-              return res.status(200).json();
-            }, 
-            function(err) {
-              return res.status(500).json({error: err});
-            });
+      // Tarkista, onko käyttäjä jo tykännyt viestistä
+      models.Like.findOne({where: {username: username, postid: id}}).then(function(like) {
+        if (like) {
+          // On jo, ei luoda uutta
+          return res.status(200).json();
+        }
+        else {
+          models.Post.findOne({where: {id: id}}).then(function(post) {
+            if (post) {
+              // Luo tykkäysobjekti
+              models.Like.create({
+                id: lID, 
+                username: username, 
+                blog: post.blogid
+              }).then(function(like) {
+                lID += 1;
+                // Lisää tykkkäys blogikirjoitukseen
+                post.addPostLike(like).then(function() {
+                  return res.status(200).json();
+                }, 
+                function(err) {
+                  return res.status(500).json({error: err});
+                });
+              }, 
+              function(err) {
+                return res.status(500).json({error: err});
+              });
+            }
+            else {
+              return res.status(404).json({error: 'PostNotFound'});
+            }
           }, 
           function(err) {
             return res.status(500).json({error: err});
           });
-        }
-        else {
-          return res.status(404).json({error: 'PostNotFound'});
         }
       }, 
       function(err) {
@@ -219,8 +235,9 @@ router.delete('/:username/likes/:id', function(req, res, next) {
     if (user) {
       // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
       if (currentUser.username !== username) {
-        return res.status(401).json({error: 'Unauthorized'});
+        return res.status(403).json({error: 'Forbidden'});
       }
+
       models.Post.findOne({where: {id: id}}).then(function(post) {
         if (post) {
           // Etsi tykkäysobjekti
@@ -277,15 +294,16 @@ router.put('/:username/follows/:id', function(req, res, next) {
     if (user) {
       // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
       if (currentUser.username !== username) {
-        return res.status(401).json({error: 'Unauthorized'});
+        return res.status(403).json({error: 'Forbidden'});
       }
       models.Blog.findOne({where: {id: id}}).then(function(blog) {
         if (blog) {
           // Luo seuraamisobjekti
           models.Follow.create({
-            username: username, 
-            id: blog.id
+            id: fID, 
+            username: username
           }).then(function(follow) {
+            fID += 1;
             if (follow) {
               // Luo yhteys
               blog.addBlogFollower(follow).then(function() {
@@ -331,7 +349,7 @@ router.delete('/:username/follows/:id', function(req, res, next) {
     if (user) {
       // Tarkista, että annettu käyttäjä on nykyinen käyttäjä
       if (currentUser.username !== username) {
-        return res.status(401).json({error: 'Unauthorized'});
+        return res.status(403).json({error: 'Forbidden'});
       }
       models.Blog.findOne({where: {id: id}}).then(function(blog) {
         if (blog) {
@@ -340,7 +358,7 @@ router.delete('/:username/follows/:id', function(req, res, next) {
           models.Follow.findOne(query).then(function(follow) {
             if (follow) {
               // Poista seuraaminen blogista
-              blog.removeBlowFollower(follow).then(function() {
+              blog.removeBlogFollower(follow).then(function() {
                 // Poista tykkäysobjekti
                 follow.destroy().then(function() {
                   return res.status(200).json();

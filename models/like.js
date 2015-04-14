@@ -2,8 +2,9 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Like = sequelize.define("Like", {
+    id: DataTypes.INTEGER, 
     username: DataTypes.STRING, // tykkääjä
-    id: DataTypes.INTEGER // viestin id
+    blogid: DataTypes.STRING // blogin id
   }, {
     classMethods: {
       associate: function(models) {

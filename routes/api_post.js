@@ -84,13 +84,15 @@ router.post('/:id/comments', function(req, res, next) {
       models.Comment.create({
       	id: cID, 
       	text: text,
-      	author: user.username
+      	author: user.username, 
+        blogid: post.blogid
       }).then(function(comment) {
         if (comment) {
           cID += 1;
           // Luo yhteydet
           post.addPostComment(comment).then(function() {
-            models.User.findOne({where: {id: user.id}}).then(function(author) {
+            return res.status(201).json({id: comment.id});
+            /*models.User.findOne({where: {id: user.id}}).then(function(author) {
           	  author.addAuthoredComment(comment).then(function() {
             	  return res.status(201).json({id: comment.id});
           	  }, 
@@ -100,7 +102,7 @@ router.post('/:id/comments', function(req, res, next) {
             },
             function(err) {
               return res.status(500).json({error: '2' + err});
-            });
+            });*/
       	  }, 
           function(err) {
             return res.status(500).json({error: '3' + err});

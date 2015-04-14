@@ -119,7 +119,7 @@ router.put('/api/user/:username',apiAuth);
 router.delete('/api/blog/:id',apiAuth);
 /*router.get('/api/user/getuser',apiAuth);*/
 router.use('/api/blog/:id/author/:username',apiAuth);
-router.use('/api/blog/:id/posts',apiAuth);
+router.post('/api/blog/:id/posts',apiAuth);
 router.post('/api/post/:id/comments',apiAuth);
 router.use('/api/user/:username/follows/:id',apiAuth);
 router.use('/api/user/:username/likes/:id',apiAuth);

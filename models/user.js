@@ -15,12 +15,12 @@ module.exports = function(sequelize, DataTypes) {
           through: 'BlogAuthors', 
           constraints: false
         });
-        User.hasMany(models.Post, {
+        /*User.hasMany(models.Post, {
           as: 'AuthoredPosts'
-        });
-        User.hasMany(models.Comment, {
+        });*/
+        /*User.hasMany(models.Comment, {
           as: 'AuthoredComments'
-        });
+        });*/
       }
     }
   });
