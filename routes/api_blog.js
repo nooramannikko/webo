@@ -95,23 +95,23 @@ router.delete('/:id', function(req, res, next) {
                         return res.status(200).json();
                       }, 
                       function(err) {
-                        return res.status(500).json({error: err});
+                        return res.status(500).json({error: '1'});
                       });
                     }, 
                     function(err) {
-                      return res.status(500).json({error: err});
+                      return res.status(500).json({error: '2'});
                     });
                   }, 
                   function(err) {
-                    return res.status(500).json({error: err});
+                    return res.status(500).json({error: '3'});
                   });
                 }, 
                 function(err) {
-                  return res.status(500).json({error: err});
+                  return res.status(500).json({error: '4'});
                 });
               }, 
               function(err) {
-                return res.status(500).json({error: err});
+                return res.status(500).json({error: '5'});
               });
             }, 
             function(err) {
