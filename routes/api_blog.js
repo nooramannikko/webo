@@ -75,7 +75,7 @@ router.delete('/:id', function(req, res, next) {
       var isAuthorized = false;
       var numAuthor = 0;
       var authorNames = currentUser.username;
-      blog.getAuthors({where: {username: currentUser.username}}).then(function(authors) {
+      blog.getAuthors({where: {id: currentUser.id}}).then(function(authors) {
         if (authors) {
           isAuthorized = true;
           // Tarkista id:stä, ettei ole oletusblogi
@@ -95,23 +95,23 @@ router.delete('/:id', function(req, res, next) {
                         return res.status(200).json();
                       }, 
                       function(err) {
-                        return res.status(500).json({error: '1'});
+                        return res.status(500).json({error: 'DeleteBlog'});
                       });
                     }, 
                     function(err) {
-                      return res.status(500).json({error: '2'});
+                      return res.status(500).json({error: 'DeleteFollor'});
                     });
                   }, 
                   function(err) {
-                    return res.status(500).json({error: '3'});
+                    return res.status(500).json({error: 'DeletePost'});
                   });
                 }, 
                 function(err) {
-                  return res.status(500).json({error: '4'});
+                  return res.status(500).json({error: 'DeleteLike'});
                 });
               }, 
               function(err) {
-                return res.status(500).json({error: '5'});
+                return res.status(500).json({error: 'DelteComment'});
               });
             }, 
             function(err) {
