@@ -147,8 +147,8 @@ router.put('/:id/author/:username', function(req, res, next) {
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
       // Tarkista, että nykyisellä käyttäjällä on kirjoitusoikeus tähän blogiin
-      blog.getAuthors({where: {username: user.username}}).then(function(authors){
-        if (authors) {
+      blog.getAuthors({where: {id: user.id}}).then(function(authors){
+        if (authors[0]) {
           //Tarkista, ettei oletusblogi
           if (!/^([0-9]*)$/.test(id)) {
             return res.status(403).json({error: 'CannotModifyDefaultBlog'});
@@ -253,7 +253,7 @@ router.post('/:id/posts', function(req, res, next) {
     if (blog) {
       // Tarkista, että käyttäjällä on blogiin kirjoitusoikeus
       blog.getAuthors({where: {id: user.id}}).then(function(author) {
-        if (author) {
+        if (author[0]) {
           // Luo viesti
           models.Post.create({
           id: pID, 
