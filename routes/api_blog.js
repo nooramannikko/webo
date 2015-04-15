@@ -127,7 +127,7 @@ router.delete('/:id', function(req, res, next) {
         }
       }, 
       function(err) {
-        return res.status(500).json({error: err});
+        return res.status(500).json({error: 'GetAuthorNotWorking'});
       });
     }
     else {
