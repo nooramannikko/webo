@@ -164,7 +164,7 @@ router.get('/:username/blogs', function(req, res, next) {
 router.put('/:username/likes/:id', function(req, res, next) {
 
   var username = req.params['username'];
-  var id = parseInt(req.params['id']);
+  var id = parseInt(req.params['id'].replace(/"|'/g, ''), 10);
   var currentUser = req.user;
 
   models.User.findOne({where: {username: username}}).then(function(user) {
@@ -228,7 +228,7 @@ router.put('/:username/likes/:id', function(req, res, next) {
 router.delete('/:username/likes/:id', function(req, res, next) {
 
   var username = req.params['username'];
-  var id = parseInt(req.params['id']);
+  var id = parseInt(req.params['id'].replace(/"|'/g, ''), 10);
   var currentUser = req.user;
 
   models.User.findOne({where: {username: username}}).then(function(user) {
@@ -287,7 +287,7 @@ router.delete('/:username/likes/:id', function(req, res, next) {
 router.put('/:username/follows/:id', function(req, res, next) {
 
   var username = req.params['username'];
-  var id = parseInt(req.params['id']);
+  var id = parseInt(req.params['id'].replace(/"|'/g, ''), 10);
   var currentUser = req.user;
 
   models.User.findOne({where: {username: username}}).then(function(user) {
@@ -342,7 +342,7 @@ router.put('/:username/follows/:id', function(req, res, next) {
 router.delete('/:username/follows/:id', function(req, res, next) {
 
   var username = req.params['username'];
-  var id = parseInt(req.params['id']);
+  var id = parseInt(req.params['id'].replace(/"|'/g, ''), 10);
   var currentUser = req.user;
 
   models.User.findOne({where: {username: username}}).then(function(user) {
