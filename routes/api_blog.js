@@ -192,6 +192,9 @@ router.delete('/:id/author/:username', function(req, res, next) {
   var id = req.params['id'];
   var user = req.user;
 
+  if(typeof id !== 'number')
+    return res.status(403).json({error: 'IdNotNumber'});
+
   var query = {where: {id: id}};
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
