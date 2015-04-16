@@ -61,7 +61,7 @@ router.get('/:id', function(req, res, next) {
 // Poista blogi
 router.delete('/:id', function(req, res, next) {
   
-  var blogid = Number(req.params['id']);
+  var blogid = req.params['id'];
   if (!blogid) {
     return res.status(404).json({error: 'BlogNotFound'});
   }
@@ -140,7 +140,7 @@ router.delete('/:id', function(req, res, next) {
 router.put('/:id/author/:username', function(req, res, next) {
 
   var username = req.params['username'];
-  var id = Number(req.params['id']);
+  var id = req.params['id'];
   var user = req.user;
 
   var query = {where: {id: id}};
@@ -189,7 +189,7 @@ router.put('/:id/author/:username', function(req, res, next) {
 router.delete('/:id/author/:username', function(req, res, next) {
 
   var username = req.params['username'];
-  var id = Number(req.params['id']);
+  var id = req.params['id'];
   var user = req.user;
 
   var query = {where: {id: id}};
@@ -237,7 +237,7 @@ router.delete('/:id/author/:username', function(req, res, next) {
 // Luo blogikirjoitus
 router.post('/:id/posts', function(req, res, next) {
 
-  var id = Number(req.params['id']);
+  var id = req.params['id'];
   var title = req.body.title;
   var text = req.body.text;
   if (!title) {
@@ -305,7 +305,7 @@ router.post('/:id/posts', function(req, res, next) {
 // Hae blogin viestit
 router.get('/:id/posts', function(req, res, next) {
 
-  var id = Number(req.params['id']);
+  var id = req.params['id'];
   models.Blog.findOne({where: {id: id}}).then(function(blog) {
     if (blog) {
       // Hae 10 uusinta viestiä
@@ -338,7 +338,7 @@ router.get('/:id/posts', function(req, res, next) {
 // Hae blogin seuraajat
 router.get('/:id/followers', function(req, res, next) {
 
-  var id = Number(req.params['id']);
+  var id = req.params['id'];
 
   models.Blog.findOne({where: {id: id}}).then(function(blog) {
     if (blog) {
