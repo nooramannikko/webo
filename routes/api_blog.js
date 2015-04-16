@@ -199,7 +199,7 @@ router.delete('/:id/author/:username', function(req, res, next) {
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
       // Tarkista, että nykyisellä käyttäjällä on kirjoitusoikeus tähän blogiin
-      blog.getAuthors({where: {username: user.username}}).then(function(authors) {
+      blog.getAuthors({where: {id: user.id}}).then(function(authors) {
         if (authors) {
           // Tarkista, ettei oletusblogi
           if (!/^([0-9]*)$/.test(id)) {
