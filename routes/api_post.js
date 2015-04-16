@@ -8,7 +8,7 @@ var cID = 1; // ID kommenteille
 // Hae blogikirjoituksen tiedot
 router.get('/:id', function(req, res, next) {
 
-	var id = req.params['id'];
+	var id = parseInt(req.params['id']);
 	var query = {where: {id: id}};
 	models.Post.findOne(query).then(function(post) {
 		if (post) {
@@ -37,7 +37,7 @@ router.get('/:id', function(req, res, next) {
 // Hakee 10 uusinta blogikirjoituksen kommenttia
 router.get('/:id/comments', function(req, res, next) {
 
-	var id = req.params['id'];
+	var id = parseInt(req.params['id']);
   models.Post.findOne({where: {id: id}}).then(function(post) {
     if (post) {
       // Hae 10 uusinta viestiä
@@ -69,7 +69,7 @@ router.get('/:id/comments', function(req, res, next) {
 // Lisää uuden kommentin blogikirjoitukseen
 router.post('/:id/comments', function(req, res, next) {
 
-	var id = req.params['id'];
+	var id = parseInt(req.params['id']);
   var text = req.body.text;
   
   if (!text) {
