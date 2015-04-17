@@ -87,7 +87,7 @@ router.delete('/:id', function(req, res, next) {
                 // Poista tykkäykset
                 models.Like.destroy({where: {blogid: blog.id}}).then(function() {
                   // Poista viestit
-                  models.Post.destroy({where: {blogid: blog.id}}).then(function() {
+                  models.Post.destroy({where: {blog_id: blog.id}}).then(function() {
                     // Poista seuraamiset
                     models.Follow.destroy({where: {blogid: blog.id}}).then(function() {
                       // Poista blogi
@@ -262,7 +262,8 @@ router.post('/:id/posts', function(req, res, next) {
           id: pID, 
           title: title,
           text: text,
-          author: author[0].username
+          author: author[0].username,
+          blog_id: id
           }).then(function(post) {
             if (post) {
               pID += 1;
