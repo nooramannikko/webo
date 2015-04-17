@@ -323,11 +323,14 @@ router.get('/:id/posts', function(req, res, next) {
             author: posts[i].author
           });
         }
+        console.log(FINDPOST, data);
         return res.status(200).json(data);
       }, 
       function(posts, err) {
-        if(typeof posts[0] == 'undefined' || typeof posts.legth == 'undefined')
+        if(typeof posts[0] == 'undefined' || typeof posts.length == 'undefined') {
+          console.log(FINDPOST, err);
           return res.status(200).json([]);
+        }
         else
           return res.status(500).json({error: err});
       });
