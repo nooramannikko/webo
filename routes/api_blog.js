@@ -313,7 +313,8 @@ router.get('/:id/posts', function(req, res, next) {
   models.Blog.findOne({where: {id: id}}).then(function(blog) {
     if (blog) {
       // Hae 10 uusinta viestiä
-      models.Post.findAndCountAll().then(function(result) {
+      var query = {where: {blog_id: blog.id}, limit: 10, order: 'createdAt DESC'};
+      models.Post.findAndCountAll(query).then(function(result) {
         if (result.count == 0 || typeof result.count == 'undefined') {
           return res.status(200).json([]);
         }
