@@ -315,16 +315,16 @@ router.get('/:id/posts', function(req, res, next) {
       // Hae 10 uusinta viestiä
       blog.getBlogPosts({limit: 10, order: 'createdAt DESC'}).then(function(posts) {
         var data = [];
-        if(posts.length > 0) {
-          for (var i = posts.length-1; i >= 0; i--) {
-            data.push({
-              id: posts[i].id, 
-              title: posts[i].title, 
-             text: posts[i].text, 
-             author: posts[i].author
-           });
-         }
-       }
+        if(posts.length == 0) 
+          return res.status(200).send([]);
+        for (var i = posts.length-1; i >= 0; i--) {
+          data.push({
+            id: posts[i].id, 
+            title: posts[i].title, 
+            text: posts[i].text, 
+            author: posts[i].author
+          });
+        }
         return res.status(200).json(data);
       }, 
       function(err) {
