@@ -313,9 +313,9 @@ router.get('/:id/posts', function(req, res, next) {
   models.Blog.findOne({where: {id: id}}).then(function(blog) {
     if (blog) {
       // Hae 10 uusinta viestiä
-      blog.getBlogPosts({limit: 10, order: 'createdAt ASC'}).then(function(posts) {
+      blog.getBlogPosts({order: 'createdAt ASC'}).then(function(posts) {
         var data = [];
-        for (var i = 0; i < posts.length; ++i) {
+        for (var i = 0; i < posts.length && i < 10; ++i) {
           data.push({
             id: posts[i].id, 
             title: posts[i].title, 
