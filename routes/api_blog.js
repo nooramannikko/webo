@@ -314,26 +314,7 @@ router.get('/:id/posts', function(req, res, next) {
     if (blog) {
       // Hae 10 uusinta viestiä
       blog.getBlogPosts({order: 'createdAt ASC'}).then(function(posts) {
-        if (posts) {
-          var data = [];
-          for (var i = 0; i < posts.length && i < 10; ++i) {
-            data.push({
-              id: posts[i].id, 
-              title: posts[i].title, 
-              text: posts[i].text, 
-              author: posts[i].author
-            });
-          }
-          return res.status(200).json(data);
-        }
-        else {
-          return res.status(200).json([]);
-        }
-      }, 
-      function(err) {
-        return res.status(500).json({error: err});
-      }
-        /*var data = [];
+        var data = [];
         for (var i = 0; i < posts.length && i < 10; ++i) {
           data.push({
             id: posts[i].id, 
@@ -345,11 +326,11 @@ router.get('/:id/posts', function(req, res, next) {
         return res.status(200).json(data);
       }, 
       function(posts, err) {
-        if(typeof posts[0] == 'undefined')
+        if(typeof posts[0] == 'undefined' || typeof posts.legth == 'undefined')
           return res.status(200).json([]);
         else
           return res.status(500).json({error: err});
-      }*/);
+      });
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});
