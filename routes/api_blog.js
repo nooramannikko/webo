@@ -329,7 +329,9 @@ router.get('/:id/posts', function(req, res, next) {
         }
         return res.status(200).json(data);
       }, 
-      function(err) {
+      function(result, err) {
+        if (typeof result.rows[0] == 'undefined')
+          return res.status(200).json([]);
         return res.status(500).json({error:err});
       });
       /*blog.getBlogPosts({limit: 10, order: 'createdAt DESC'}).then(function(posts) {
