@@ -313,7 +313,28 @@ router.get('/:id/posts', function(req, res, next) {
   models.Blog.findOne({where: {id: id}}).then(function(blog) {
     if (blog) {
       // Hae 10 uusinta viestiä
-      blog.getBlogPosts({order: 'createdAt ASC'}).then(function(posts) {
+      models.Post.findAndCountAll().then(function(result) {
+        if (result.count == 0 || typeof result.count == 'undefined') {
+          return res.status(200).json([]);
+        }
+        var data = [];
+        for (var i = result.count-1; i >= 0; i--) {
+          data.push({
+            id: result.rows[i].id, 
+            title: result.rows[i].title, 
+            text: result.rows[i].text, 
+            author: result.rows[i].author
+          });
+        }
+        return res.status(200).json(data);
+      }, 
+      function(err) {
+        return res.status(500).json({error:err});
+      });
+      /*blog.getBlogPosts({limit: 10, order: 'createdAt DESC'}).then(function(posts) {
+        if (posts.length == 'undefined') {
+          return res.status(200).json([]);
+        }
         var data = [];
         for (var i = 0; i < posts.length && i < 10; ++i) {
           data.push({
@@ -323,17 +344,14 @@ router.get('/:id/posts', function(req, res, next) {
             author: posts[i].author
           });
         }
-        console.log("FINDPOST", data);
         return res.status(200).json(data);
       }, 
       function(posts, err) {
-        if(typeof posts[0] == 'undefined' || typeof posts.length == 'undefined') {
-          console.log("FINDPOST", err);
+        if(typeof posts[0] == 'undefined')
           return res.status(200).json([]);
-        }
         else
           return res.status(500).json({error: err});
-      });
+      });*/
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});
