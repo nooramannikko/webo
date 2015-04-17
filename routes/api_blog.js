@@ -313,6 +313,12 @@ router.get('/:id/posts', function(req, res, next) {
   models.Blog.findOne({where: {id: id}}).then(function(blog) {
     if (blog) {
       // Hae 10 uusinta viestiä
+      blog.getBlogPosts({limit: 1}).then(function(posts) {
+      }, 
+      function(err) {
+        return res.status(200).json([]);
+      });
+
       blog.getBlogPosts({limit: 10, order: 'createdAt DESC'}).then(function(posts) {
         var data = [];
         if(posts.length == 0) 
