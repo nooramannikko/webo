@@ -301,7 +301,8 @@ router.put('/:username/follows/:id', function(req, res, next) {
           // Luo seuraamisobjekti
           models.Follow.create({
             id: fID, 
-            username: username
+            username: username,
+            blog_id: id
           }).then(function(follow) {
             fID += 1;
             if (follow) {

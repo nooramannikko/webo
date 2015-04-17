@@ -89,7 +89,7 @@ router.delete('/:id', function(req, res, next) {
                   // Poista viestit
                   models.Post.destroy({where: {blog_id: blog.id}}).then(function() {
                     // Poista seuraamiset
-                    models.Follow.destroy({where: {blogid: blog.id}}).then(function() {
+                    models.Follow.destroy({where: {blog_id: blog.id}}).then(function() {
                       // Poista blogi
                       blog.destroy().then(function() {
                         return res.status(200).json();
