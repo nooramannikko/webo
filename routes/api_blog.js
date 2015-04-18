@@ -326,6 +326,9 @@ router.get('/:id/posts', function(req, res, next) {
             text: result.rows[i].text, 
             author: result.rows[i].author
           });
+
+          if(i == 0)
+              break;
         }
         return res.status(200).json(data);
       }, 
@@ -334,27 +337,6 @@ router.get('/:id/posts', function(req, res, next) {
           return res.status(200).json([]);
         return res.status(500).json({error:err});
       });
-      /*blog.getBlogPosts({limit: 10, order: 'createdAt DESC'}).then(function(posts) {
-        if (posts.length == 'undefined') {
-          return res.status(200).json([]);
-        }
-        var data = [];
-        for (var i = 0; i < posts.length && i < 10; ++i) {
-          data.push({
-            id: posts[i].id, 
-            title: posts[i].title, 
-            text: posts[i].text, 
-            author: posts[i].author
-          });
-        }
-        return res.status(200).json(data);
-      }, 
-      function(posts, err) {
-        if(typeof posts[0] == 'undefined')
-          return res.status(200).json([]);
-        else
-          return res.status(500).json({error: err});
-      });*/
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});
