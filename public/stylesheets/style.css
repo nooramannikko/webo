@@ -1,12 +1,37 @@
-h1.tamplr-logo {
-  font-family: 'Bree Serif', serif;
-  color: violet ;
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+  background-color: #eee !important;
 }
 
-h1.tamplr-logo:after {
-  content: ".";
-  position: relative;
-  right: 0.1em;
+.sisalto {
+	margin: 15px auto !important;
+	max-width: 800px !important;
+	background-color: #fff !important;
+	padding: 20px !important;
+	border-radius: 5px;
+	box-shadow: 0 0 4px #ddd;
 }
+
+.btn-success {
+	border-color: #337ab7 !important;
+}
+
+.btn-lg {
+	border-color: #DB7093 !important;
+	float: right !important;
+	margin-top: -15px;
+}
+
+.btn-lg:hover {
+	background-color: #C56584 !important;
+}
+
+h1 {
+  font-family: 'Bree Serif', serif;
+  color: #DB7093 !important;
+}
+
+
 
 

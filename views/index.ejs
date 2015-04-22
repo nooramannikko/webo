@@ -1,10 +1,221 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Tamplr</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
     <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
     <link rel='stylesheet' href='/stylesheets/style.css'>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Etusivu</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right">
+            <div class="form-group">
+              <input type="text" placeholder="Email" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Tamplr</h1>
+        <p>Tamplr on web-sivusto, jossa käyttäjät voivat kirjoitella blogikirjoituksia ja lukea toistensa kirjoituksia sekä tykätä ja kommentoida niitä.</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Lue lisää &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container sisalto">
+      
+      <p>Tamplr:ssa on <%= users.length %> käyttäjää.
+      <ul>
+      <% for(var i=0; i<users.length; i++) {%>
+        <% var u = users[i]; %>
+        <li>
+          <a href="/api/user/<%= u.username %>">
+            <%= u.username %>
+          </a>
+        </li>
+        <% } %>
+      </ul>
+
+      <!-- Käyttäjän jutut -->
+      <form method="POST" action="/api/user">
+        username: <input type="text" name="username"><br>
+        name: <input type="text" name="name"><br>
+        password: <input type="password" name="password"><br>
+        <input type="submit" value="Lisää käyttäjä">
+      </form><br>
+
+      <form id="getuser" method="GET" action="/api/user">
+        username: <input type="text" id="getuser-username"><br>
+        <input type="submit" value="Hae käyttäjä">
+      </form><br>
+
+      username: <input id="usernameinupdate" type="text"><br>
+      name: <input id="newname" type="text"><br>
+      password: <input id="newpassword" type="password"><br>
+      <button id="updateuserinfo" onclick="updateUser()">Päivitä käyttäjän tiedot</button>
+
+      <p id="output"></p>
+
+      <!-- Kirjaudu sisään -->
+      <form id="login" method="POST" action="/login">
+        username: <input type="text" name="username"><br>
+        password: <input type="password" name="password"><br>
+        <input type="submit" value="Kirjaudu">
+      </form><br>
+
+      <!-- Kirjaudu ulos -->
+      <form id="login" method="POST" action="/logout">
+        <input type="submit" value="Kirjaudu ulos">
+      </form><br>
+
+    </div>
+    <div class="container sisalto">
+
+      <!-- Ryhmä -->
+      <form method="GET" action="/api/ht">
+        <input type="submit" value="Mikä ryhmä">
+      </form><br>
+
+      <!-- Blogijutut -->
+      <form method="POST" action="/api/blog">
+        name: <input type="text" name="name"><br>
+        <input type="submit" value="Luo blogi">
+      </form><br>
+
+      <form id="getblog" method="GET" action="/api/blog">
+        id: <input type="text" id="getblog-blogid"><br>
+        <input type="submit" value="Hae blogi">
+      </form><br>
+
+      <form id="getauthoredblogs" method="GET" action="/api/user">
+        username: <input type="text" id="getauthoredblogs-username"><br>
+        <input type="submit" value="Hae käyttäjän blogit">
+      </form><br>
+
+      <p id="blogoutput"></p>
+
+      id: <input id="deleteblog-id" type="text"><br>
+      <button id="deleteblog" onclick="deleteBlog()">Poista blogi</button><br>
+      <p id="deleteblogoutput"></p><br>
+
+      username: <input id="usernametoadd" type="text"><br>
+      id: <input id="adduser-blog" type="text"><br>
+      <button id="adduserblog" onclick="addUser()">Lisää kirjoitusoikeus blogiin</button><br><br>
+
+      username: <input id="usernametoremove" type="text"><br>
+      id: <input id="removeuser-blog" type="text"><br>
+      <button id="removeuserblog" onclick="removeUser()">Poista kirjoitusoikeus blogista</button><br><br>
+
+    </div>
+    <div class="container sisalto">
+
+      <!-- Blogikirjoitukset -->
+      <form id="newblogpost" method="POST" action="/api/blog">
+        id (urlista): <input type="text" id="new-post-id" name="id"><br>
+        title: <input type="text" name="title"><br>
+        text: <input type="text" name="text"><br>
+        <input type="submit" value="Lisää blogikirjoitus"><br>
+      </form><br>
+
+      <form id="getblogposts" method="GET" action="api/blog">
+        id: <input id="getpost-blogid" type="text"><br>
+        <input type="submit" value="Hae blogin viestit"><br>
+      </form><br>
+
+      <form id="getsinglepost" method="GET" action="/api/post">
+        id: <input id="getpost-postid" type="text"><br>
+        <input type="submit" value="Hae blogikirjoitus"><br>
+      </form><br>
+
+      <!-- Kommentit -->
+      <form id="newcomment" method="POST" action="/api/post">
+        id (urlista): <input type="text" id="new-comment-id" name="id"><br>
+        text: <input type="text" name="text"><br>
+        <input type="submit" value="Lisää kommentti"><br>
+      </form><br>
+
+      <form id="getpostcomments" method="POST" action="/api/post">
+        id (urlista): <input type="text" id="getcomments-id" name="id"><br>
+        <input type="submit" value="Hae blogikirjoituksen kommentit"><br>
+      </form><br>
+
+    </div>
+    <div class="container sisalto">
+
+      <!-- Kirjoitusoikeudet -->
+      username: <input id="username-addlike" type="text"><br>
+      blogpost id: <input id="postid-addlike" type="text"><br>
+      <button id="likepost" onclick="addLike()">Tykkää blogikirjoituksesta</button><br><br>
+
+      username: <input id="username-removelike" type="text"><br>
+      blogpost id: <input id="postid-removelike" type="text"><br>
+      <button id="dislikepost" onclick="removeLike()">Poista tykkäys blogikirjoituksesta</button><br><br>
+
+      <p id="postoutput"></p>
+
+      <!-- Seuraamiset -->
+      <form id="getfollowers" method="GET" action="/api/user">
+        blog id: <input id="getfollowers-blogid" type="text"><br>
+        <input type="submit" value="Hae blogin seuraajat"><br>
+      </form><br>
+
+      <form id="getblogfollows" method="GET" action="/api/user">
+        username: <input id="getfollows-username" type="text"><br>
+        <input type="submit" value="Hae käyttäjän seuraamat blogit"><br>
+      </form><br>
+
+      username: <input id="username-follow" type="text"><br>
+      blog id: <input id="blogid-follow" type="text"><br>
+      <button id="followblog" onclick="addFollow()">Seuraa blogia</button><br><br>
+
+      username: <input id="username-removefollow" type="text"><br>
+      blogpost id: <input id="blogid-removefollow" type="text"><br>
+      <button id="unfollowblog" onclick="removeFollow()">Peru blogin seuraaminen</button><br><br>
+
+      <p id="followoutput"></p>
+
+      <hr>
+
+      <footer>
+        <p>&copy; nununu 2015</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script>
     <script src="/javascript/getUser.js"></script>
     <script src="/javascript/getBlog.js"></script>
@@ -15,159 +226,6 @@
     <script src="/javascript/updateBlog.js"></script>
     <script src="/javascript/manageLikes.js"></script>
     <script src="/javascript/manageFollows.js"></script>
-  </head>
-  <body>
-    <h1 class="tamplr-logo">tamplr</h1>
-    <p>Tamplr:ssa on <%= users.length %> käyttäjää.
-    <ul>
-    <% for(var i=0; i<users.length; i++) {%>
-      <% var u = users[i]; %>
-      <li>
-        <a href="/api/user/<%= u.username %>">
-          <%= u.username %>
-        </a>
-      </li>
-    <% } %>
-    </ul>
-    <!--
-    <p>
-      Voit lisätä uuden käyttäjän seuraavanlaisella
-      <a href="http://curl.haxx.se/">curl</a>-komennolla:
-    </p>
-    <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{"username": "teemu"}'</pre>
-    <p>
-      Windowsissa pitää käyttää vähän ylimääräisiä kenoviivoja:
-    </p>
-    <pre>curl -X POST http://<%= host %>/api/user -H 'Content-Type: application/json' -d '{\"username\": \"teemu\"}'</pre>-->
-
-    <!-- Käyttäjän jutut -->
-    <form method="POST" action="/api/user">
-      username: <input type="text" name="username"><br>
-      name: <input type="text" name="name"><br>
-      password: <input type="password" name="password"><br>
-      <input type="submit" value="Lisää käyttäjä">
-    </form><br>
-
-    <form id="getuser" method="GET" action="/api/user">
-      username: <input type="text" id="getuser-username"><br>
-      <input type="submit" value="Hae käyttäjä">
-    </form><br>
-
-    username: <input id="usernameinupdate" type="text"><br>
-    name: <input id="newname" type="text"><br>
-    password: <input id="newpassword" type="password"><br>
-    <button id="updateuserinfo" onclick="updateUser()">Päivitä käyttäjän tiedot</button>
-
-    <p id="output"></p>
-
-    <!-- Kirjaudu sisään -->
-    <form id="login" method="POST" action="/login">
-      username: <input type="text" name="username"><br>
-      password: <input type="password" name="password"><br>
-      <input type="submit" value="Kirjaudu">
-    </form><br>
-
-    <!-- Kirjaudu ulos -->
-    <form id="login" method="POST" action="/logout">
-      <input type="submit" value="Kirjaudu ulos">
-    </form><br>
-
-    <!-- Ryhmä -->
-    <form method="GET" action="/api/ht">
-      <input type="submit" value="Mikä ryhmä">
-    </form><br>
-
-    <!-- Blogijutut -->
-    <form method="POST" action="/api/blog">
-      name: <input type="text" name="name"><br>
-      <input type="submit" value="Luo blogi">
-    </form><br>
-
-    <form id="getblog" method="GET" action="/api/blog">
-      id: <input type="text" id="getblog-blogid"><br>
-      <input type="submit" value="Hae blogi">
-    </form><br>
-
-    <form id="getauthoredblogs" method="GET" action="/api/user">
-      username: <input type="text" id="getauthoredblogs-username"><br>
-      <input type="submit" value="Hae käyttäjän blogit">
-    </form><br>
-
-    <p id="blogoutput"></p>
-
-    id: <input id="deleteblog-id" type="text"><br>
-    <button id="deleteblog" onclick="deleteBlog()">Poista blogi</button><br>
-    <p id="deleteblogoutput"></p><br>
-
-    username: <input id="usernametoadd" type="text"><br>
-    id: <input id="adduser-blog" type="text"><br>
-    <button id="adduserblog" onclick="addUser()">Lisää kirjoitusoikeus blogiin</button><br><br>
-
-    username: <input id="usernametoremove" type="text"><br>
-    id: <input id="removeuser-blog" type="text"><br>
-    <button id="removeuserblog" onclick="removeUser()">Poista kirjoitusoikeus blogista</button><br><br>
-
-    <!-- Blogikirjoitukset -->
-    <form id="newblogpost" method="POST" action="/api/blog">
-      id (urlista): <input type="text" id="new-post-id" name="id"><br>
-      title: <input type="text" name="title"><br>
-      text: <input type="text" name="text"><br>
-      <input type="submit" value="Lisää blogikirjoitus"><br>
-    </form><br>
-
-    <form id="getblogposts" method="GET" action="api/blog">
-      id: <input id="getpost-blogid" type="text"><br>
-      <input type="submit" value="Hae blogin viestit"><br>
-    </form><br>
-
-    <form id="getsinglepost" method="GET" action="/api/post">
-      id: <input id="getpost-postid" type="text"><br>
-      <input type="submit" value="Hae blogikirjoitus"><br>
-    </form><br>
-
-    <!-- Kommentit -->
-    <form id="newcomment" method="POST" action="/api/post">
-      id (urlista): <input type="text" id="new-comment-id" name="id"><br>
-      text: <input type="text" name="text"><br>
-      <input type="submit" value="Lisää kommentti"><br>
-    </form><br>
-
-    <form id="getpostcomments" method="POST" action="/api/post">
-      id (urlista): <input type="text" id="getcomments-id" name="id"><br>
-      <input type="submit" value="Hae blogikirjoituksen kommentit"><br>
-    </form><br>
-
-    <!-- Kirjoitusoikeudet -->
-    username: <input id="username-addlike" type="text"><br>
-    blogpost id: <input id="postid-addlike" type="text"><br>
-    <button id="likepost" onclick="addLike()">Tykkää blogikirjoituksesta</button><br><br>
-
-    username: <input id="username-removelike" type="text"><br>
-    blogpost id: <input id="postid-removelike" type="text"><br>
-    <button id="dislikepost" onclick="removeLike()">Poista tykkäys blogikirjoituksesta</button><br><br>
-
-    <p id="postoutput"></p>
-
-    <!-- Seuraamiset -->
-    <form id="getfollowers" method="GET" action="/api/user">
-      blog id: <input id="getfollowers-blogid" type="text"><br>
-      <input type="submit" value="Hae blogin seuraajat"><br>
-    </form><br>
-
-    <form id="getblogfollows" method="GET" action="/api/user">
-      username: <input id="getfollows-username" type="text"><br>
-      <input type="submit" value="Hae käyttäjän seuraamat blogit"><br>
-    </form><br>
-
-    username: <input id="username-follow" type="text"><br>
-    blog id: <input id="blogid-follow" type="text"><br>
-    <button id="followblog" onclick="addFollow()">Seuraa blogia</button><br><br>
-
-    username: <input id="username-removefollow" type="text"><br>
-    blogpost id: <input id="blogid-removefollow" type="text"><br>
-    <button id="unfollowblog" onclick="removeFollow()">Peru blogin seuraaminen</button><br><br>
-
-    <p id="followoutput"></p>
-
+    <script src="/javascript/bootstrap.min.js"></script>
   </body>
 </html>
