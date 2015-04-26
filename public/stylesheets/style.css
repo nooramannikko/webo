@@ -23,6 +23,11 @@ body {
 	margin-top: -15px;
 }
 
+.btn-sgu {
+	height: 34px;
+	margin-left: -10px;
+}
+
 .btn-lg:hover {
 	background-color: #C56584 !important;
 }

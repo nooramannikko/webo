@@ -270,12 +270,6 @@ router.post('/:id/posts', function(req, res, next) {
               // Luo yhteydet
               blog.addBlogPost(post).then(function() {
                 return res.status(201).json({id: post.id});
-                /*author[0].addAuthoredPost(post).then(function() {
-                  return res.status(201).json({id: post.id});
-                }, 
-                function(err) {
-                  return res.status(500).json({error: '1' + err}); // Numerot testausta varten
-                });*/
               }, 
               function(err) {
                 return res.status(500).json({error: '2' + err});

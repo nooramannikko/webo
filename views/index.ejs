@@ -30,12 +30,13 @@
           <a class="navbar-brand" href="#">Etusivu</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
+          <button class="navbar-form navbar-right btn btn-sgu" id="newaccount" onclick="loadAccountPage()">Sign up</button>
+          <form class="navbar-form navbar-right" id="login" method="POST" action="/login">
             <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
+              <input type="text" placeholder="Username" class="form-control" name="username">
             </div>
             <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
+              <input type="password" placeholder="Password" class="form-control" name="password">
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
           </form>
@@ -50,6 +51,14 @@
         <p>Tamplr on web-sivusto, jossa käyttäjät voivat kirjoitella blogikirjoituksia ja lukea toistensa kirjoituksia sekä tykätä ja kommentoida niitä.</p>
         <p><a class="btn btn-primary btn-lg" href="#" role="button">Lue lisää &raquo;</a></p>
       </div>
+    </div>
+
+    <div class="container sisalto">
+      <p>Pysyvä sisältö</p>
+    </div>
+
+    <div class="container sisalto" id="dynamiccontent">
+      <p>Näkymäkohtainen sisältö</p>
     </div>
 
     <div class="container sisalto">
@@ -94,7 +103,7 @@
       </form><br>
 
       <!-- Kirjaudu ulos -->
-      <form id="login" method="POST" action="/logout">
+      <form id="logout" method="POST" action="/logout">
         <input type="submit" value="Kirjaudu ulos">
       </form><br>
 
@@ -217,6 +226,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="/javascript/createUser.js"></script>
     <script src="/javascript/getUser.js"></script>
     <script src="/javascript/getBlog.js"></script>
     <script src="/javascript/getPost.js"></script>

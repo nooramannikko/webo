@@ -114,6 +114,10 @@ router.post('/login',
   });
 });
 
+router.get('/account', function(req, res, next) {
+  res.render('account', {host: req.headers.host});
+});
+
 router.post('/api/blog*',apiAuth);
 router.put('/api/user/:username',apiAuth);
 router.delete('/api/blog/:id',apiAuth);

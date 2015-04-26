@@ -1,0 +1,13 @@
+<!-- Tilin luonti -->
+<h3>Luo uusi käyttäjätili</h3>
+<p>Kaikki kentät ovat pakolisia. Käyttäjätunnuksen voi sisältää pieniä kirjaimia, umeroita sekä merkin '_'. Ensimmäisen merkin on oltava kirjain.</p>
+
+<form id="createaccount" method="POST" action="/api/user">
+    <input id="accountuser" type="text" name="username", placeholder="Käyttäjätunnus"><br>
+    <input id="accountname" type="text" name="name" placeholder="Nimi"><br>
+    <input id="accountpassword" type="password" name="password" placeholder="Salasana"><br>
+    <input type="submit" value="Luo tili">
+</form><br>
+
+<p id="account-success"></p>
+

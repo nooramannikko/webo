@@ -33,6 +33,44 @@ router.get('/:id', function(req, res, next) {
 	});
 });
 
+// Hakee 10 uusinta blogikirjoitusta blogista riippumatta
+router.get('/', function(req, res, next) {
+
+  models.Post.findAll({limit: 10, order: 'createdAt DESC'}).then(function(result) {
+    if (result.count == 0 || typeof result.count == 'undefined') {
+      return res.status(200).json([]);
+    }
+
+    var data = [];
+    var name;
+    for (var i = result.count-1; i >= 0; i--) {
+      modles.Blog.findOne({where: {id: result.rows[i].blog_id}}).then(function(blog) {
+        if (blog)
+          name = blog.name;
+        else
+          return res.status(404).json({error: 'BlogNotFound'});
+      }, 
+      function(err) {
+        return res.status(500).json({error: err});
+      });
+      data.push({
+        title: result.rows[i].title, 
+        author: result.rows[i].author, 
+        blog: name
+      });
+
+      if(i == 0)
+        break;
+    }
+    return res.status(200).json(data);
+  }, 
+  function(result, err) {
+    if (typeof result.rows[0] == 'undefined')
+      return res.status(200).json([]);
+    return res.status(500).json({error: err});
+  });
+});
+
 
 // Hakee 10 uusinta blogikirjoituksen kommenttia
 router.get('/:id/comments', function(req, res, next) {
@@ -92,17 +130,6 @@ router.post('/:id/comments', function(req, res, next) {
           // Luo yhteydet
           post.addPostComment(comment).then(function() {
             return res.status(201).json({id: comment.id});
-            /*models.User.findOne({where: {id: user.id}}).then(function(author) {
-          	  author.addAuthoredComment(comment).then(function() {
-            	  return res.status(201).json({id: comment.id});
-          	  }, 
-        	    function(err) {
-          	    return res.status(500).json({error: '1' + err}); // Numerot testausta varten
-          	  });
-            },
-            function(err) {
-              return res.status(500).json({error: '2' + err});
-            });*/
       	  }, 
           function(err) {
             return res.status(500).json({error: '3' + err});
