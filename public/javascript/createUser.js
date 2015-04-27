@@ -1,11 +1,4 @@
 $(document).ready(function() {
-	
-	/*$("#newaccount").click(function(e) {
-		e.preventDefault();
-		e.returnValue = false;
-
-		$("#dynamiccontent").load("account.ejs");
-	});*/
 
 	$("#createaccount").submit(function(e) {
 		e.preventDefault();
@@ -20,7 +13,7 @@ $(document).ready(function() {
 			data: {username: username, name: name, password: password}, 
 			dataType: 'json',
 			statusCode: {
-				201:function() { $("#account-success").html("Käyttäjätunnus luotu onnistuneesti."); },
+				201:function() { $("#dynamiccontent").html("Käyttäjätunnus luotu onnistuneesti."); },
 				400:function() { $("#account-success").html("Tarkista, että käyttäjätunnus, nimi ja salasana on annettu oikeellisesti."); }, 
 				409:function() { $("#account-success").html("Käyttäjätunnus " + username +  " on jo käytössä"); }
 			},
