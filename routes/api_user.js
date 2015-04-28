@@ -424,18 +424,21 @@ router.get('/:username/follows', function(req, res, next) {
   });
 });
 
-/*router.get('/getuser', function(req, res, next) {
+router.get('/getuser', function(req, res, next) {
 
 // EI TOIMI
   var user = req.user;
-  models.User.findOne({where: {username: user}}).then(function(u) {
+  models.User.findOne({where: {username: user.username}}).then(function(u) {
     if (u) {
       return res.status(200).json({username: u.username});
     }
     else {
-      return res.status(500).json({error: 'ServerError'});
+      return res.status(404).json({error: user.username + ' UserNotFound'});
     }
+  }, 
+  function(err) {
+    return res.status(500).json({error: '1 ' + err});
   });
-});*/
+});
 
 module.exports = router;

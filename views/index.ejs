@@ -27,9 +27,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Etusivu</a>
+          <a class="navbar-brand" href="/">Etusivu</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
+          <ul class="navbar-nav nav">
+            <li><a href="#" id="loadsettings">Asetukset</a></li>
+          </ul>
           <button class="navbar-form navbar-right btn btn-sgu" id="newaccount" onclick="loadAccountPage()">Sign up</button>
           <form class="navbar-form navbar-right" id="login" method="POST" action="/login">
             <div class="form-group">
@@ -237,5 +240,6 @@
     <script src="/javascript/manageLikes.js"></script>
     <script src="/javascript/manageFollows.js"></script>
     <script src="/javascript/bootstrap.min.js"></script>
+    <script src="/javascript/authentication.js"></script>
   </body>
 </html>

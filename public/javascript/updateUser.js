@@ -10,9 +10,9 @@ function updateUser() {
 		dataType: 'json', 
 		data: { name: name, password: password }, 
 		statusCode: {
-			200: function() { $("#output").html("Käyttäjän tiedot päivitetty"); }, 
-			400: function() { $("#output").html("Tyhjä nimi tai salasana, ei päivitetty"); }, 
-			404: function() { $("#output").html("Käyttäjää ei löydy"); }
+			200: function() { $("#updateuser-success").html("Tiedot päivitetty onnistuneesti."); }, 
+			400: function() { $("#updateuser-success").html("Tarkista, että olet antanut sekä nimen että salasanan."); }, 
+			404: function() { $("#updateuser-success").html("Käyttäjää ei löydy"); }
 		}
 	});
 
@@ -41,3 +41,28 @@ function updateUser() {
 		}
 	});*/
 }
+
+function getUsername() {
+	$.ajax({
+		type: "GET", 
+		url: 'http://localhost:3000/api/user/getuser', 
+		dataType: 'json', 
+		statusCode: {
+			200:function(data) { $("#checkusername").html(data['username']); }, 
+			500:function(data) { $("#checkusername").html(data['error']); }
+		}
+	});
+}
+
+function loadSettingsPage() {
+	$("#dynamiccontent").load("settings");
+}
+
+$(document).ready(function() {
+	$("#loadsettings").click(function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+
+		loadSettingsPage();
+	});
+});

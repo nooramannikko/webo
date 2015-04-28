@@ -24,3 +24,4 @@ $(document).ready(function() {
 function loadAccountPage() {
 	$("#dynamiccontent").load("account");
 }
+
