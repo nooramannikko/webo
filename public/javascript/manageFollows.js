@@ -65,3 +65,40 @@ function removeFollow() {
 	});
 }
 
+function getFollowedBlogs() {
+
+	var username; // Hae elementistä, johon käyttäjän nimi laitetaan näkyviin
+
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:3000/api/user/' + username + '/follows',
+		dataType: 'json',
+		statusCode: {
+			200:function(data) { 
+				var content;
+				for (var i = 0; i < data.length; i++)
+				{
+					var name = getBlogNameById(data[i].id);
+					content += '<li><a href="/api/blog' + data[i].id + '>' + name + '</a></li>';
+				}
+				$("#blogsfollowed").html(content); 
+			},
+			404:function() { $("#blogsfollowed").html("Seurattuja blogeja ei saatu haettua"); }
+		},
+	});
+
+}
+
+function getBlogNameById(id) {
+	var name;
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:3000/api/blog/' + id,
+		dataType: 'json',
+		statusCode: {
+			200:function(data) { name = data.name; },
+			404:function() { name = "Blogin nimeä ei löydy"; }
+		},
+	});
+}
+

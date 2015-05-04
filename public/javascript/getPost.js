@@ -17,4 +17,27 @@ $(document).ready(function() {
 			},
 		});
 	});
+
 });
+
+function getLatestPosts() {
+
+	$.ajax({
+		type: "GET", 
+		url: 'http://localhost:3000/api/post', 
+		dataType: 'json', 
+		statusCode: {
+			200:function(data) { 
+				var content;
+				for (var i = 0; i < data.length; i++)
+				{
+					content += '<a href="/api/post/' + data[i].id + '><h3>' + data[i].title + '</h3></a>';
+					content += '<p>' + data[i].author + '<br>' + data[i].name + '</p>';
+				}
+				$("#latestposts").html(content);
+			}, 
+			404:function() { $("#latestposts").html("Uusimpia blogikirjoituksia ei saatu haettua"); }, 
+			500:function() { $("#latestposts").html("Uusimpia blogikirjoituksia ei saatu haettua"); }
+		}
+	});
+}

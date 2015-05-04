@@ -54,6 +54,7 @@ router.get('/', function(req, res, next) {
         return res.status(500).json({error: err});
       });
       data.push({
+        id: result.rows[i].id, 
         title: result.rows[i].title, 
         author: result.rows[i].author, 
         blog: name
