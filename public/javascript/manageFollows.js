@@ -89,15 +89,14 @@ function getFollowedBlogs() {
 
 }
 
-function getBlogNameById(id) {
-	var name;
+function getBlogNameById(id, next) {
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:3000/api/blog/' + id,
 		dataType: 'json',
 		statusCode: {
-			200:function(data) { name = data.name; },
-			404:function() { name = "Blogin nimeä ei löydy"; }
+			200:function(data) { next(data.name); },
+			404:function() { next("Blogin nimeä ei löydy"); }
 		},
 	});
 }

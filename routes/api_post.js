@@ -42,22 +42,11 @@ router.get('/', function(req, res, next) {
     }
 
     var data = [];
-    var name;
     for (var i = result.count-1; i >= 0; i--) {
-      modles.Blog.findOne({where: {id: result.rows[i].blog_id}}).then(function(blog) {
-        if (blog)
-          name = blog.name;
-        else
-          return res.status(404).json({error: 'BlogNotFound'});
-      }, 
-      function(err) {
-        return res.status(500).json({error: err});
-      });
       data.push({
         id: result.rows[i].id, 
         title: result.rows[i].title, 
-        author: result.rows[i].author, 
-        blog: name
+        author: result.rows[i].author
       });
 
       if(i == 0)
