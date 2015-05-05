@@ -2,11 +2,13 @@
 <h3>Muokkaa tietojasi</h3>
 <p>Voit päivittää nimesi ja/tai salasanasi. Jos haluat päivittää vain toisen näistä, anna toiseksi tiedoksi nykyinen nimesi/salasanasi.</p>
 
-<input id="newname" type="text" placeholder="Nimi"><br>
-<input id="newpassword" type="password" placeholder="Salasana"><br>
-<button id="updateuserinfo" onclick="updateUser()">Päivitä käyttäjän tiedot</button><br>
+<table class="kokoleveys"><tr><td valign="top" class="sisennys">
+<input class="form-padding" id="newname" type="text" placeholder="Nimi"><br>
+<input class="form-padding" id="newpassword" type="password" placeholder="Salasana"><br>
+<button id="updateuserinfo" onclick="updateUser()">Päivitä käyttäjän tiedot</button><br><br>
 
-<button onclick="getUsername()">Hae käyttäjänimi</button>
-<p id="checkusername"></p>
+</td><td valign="top" class="leveysnelkyt">
+<div id="updateuser-success"></div>
+</td></tr></table>
 
 <script src="javascript/updateUser.js" />

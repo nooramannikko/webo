@@ -31,14 +31,15 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="navbar-nav nav">
+            <% if (locals.user) { %>
             <li><a href="#" id="loadsettings">Asetukset</a></li>
+            <% } %>
           </ul>
+          
           <!-- Login formi ja sign up toiminto, vaihda käyttäjän nimeen ja log out -nappiin, kun käyttäjä on kirjautunut -->
           <% if (locals.user) { %>
-            <!-- Käyttäjän nimi, toimiiko?? -->
-            <div></div>
-            <form id="logoutbtn" method="POST" action="/logout" class="btn btn-success">
-              <input type="submit" value="Log out">
+            <form id="logoutbtn" method="POST" action="/logout" class="navbar-form navbar-right">
+              <button class="btn btn-success" type="submit">Log out</button>
             </form>
           <% } else { %>
             <button class="navbar-form navbar-right btn btn-sgu" id="newaccount" onclick="loadAccountPage()">Sign up</button>
@@ -52,6 +53,11 @@
               <button type="submit" class="btn btn-success">Sign in</button>
             </form>
           <% } %>
+          <ul class="navbar-nav nav navbar-right">
+            <% if (locals.user) { %>
+            <li class="navbar-teksti">Kirjatuneena <strong><%= user.username %></strong></li>
+            <% } %>
+          </ul>
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
@@ -65,8 +71,7 @@
       </div>
     </div>
 
-    <div class="container sisalto">
-      <p>Pysyvä sisältö</p>
+    <div class="container sisalto" id="dynamiccontent">
       <!-- 10 uusinta blogikirjoitusta -->
       <h1>Uusimmat blogikirjoitukset</h1>
       <div id="latestposts" >Lista</div>
@@ -87,10 +92,6 @@
       <% } %>
     </div>
 
-    <div class="container sisalto" id="dynamiccontent">
-      <p>Näkymäkohtainen sisältö</p>
-    </div>
-
     <div class="container sisalto">
       
       <p>Tamplr:ssa on <%= users.length %> käyttäjää.
@@ -106,12 +107,7 @@
       </ul>
 
       <!-- Käyttäjän jutut -->
-      <form method="POST" action="/api/user">
-        username: <input type="text" name="username"><br>
-        name: <input type="text" name="name"><br>
-        password: <input type="password" name="password"><br>
-        <input type="submit" value="Lisää käyttäjä">
-      </form><br>
+      
 
       <form id="getuser" method="GET" action="/api/user">
         username: <input type="text" id="getuser-username"><br>
@@ -125,18 +121,6 @@
 
       <p id="output"></p>
 
-      <!-- Kirjaudu sisään -->
-      <form id="login" method="POST" action="/login">
-        username: <input type="text" name="username"><br>
-        password: <input type="password" name="password"><br>
-        <input type="submit" value="Kirjaudu">
-      </form><br>
-
-      <!-- Kirjaudu ulos -->
-      <form id="logout" method="POST" action="/logout">
-        <input type="submit" value="Kirjaudu ulos">
-      </form><br>
-
     </div>
     <div class="container sisalto">
 
@@ -146,11 +130,7 @@
       </form><br>
 
       <!-- Blogijutut -->
-      <form method="POST" action="/api/blog">
-        name: <input type="text" name="name"><br>
-        <input type="submit" value="Luo blogi">
-      </form><br>
-
+     
       <form id="getblog" method="GET" action="/api/blog">
         id: <input type="text" id="getblog-blogid"><br>
         <input type="submit" value="Hae blogi">
