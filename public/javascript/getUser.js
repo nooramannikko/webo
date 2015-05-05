@@ -31,11 +31,20 @@ $(document).ready(function() {
 			},
 		});
 	});
+
+	$("#authoredblogs").html("Haetaan");
+	$.ajax({
+		type: "GET", 
+		url: 'http://localhost:3000/username', 
+		dataType: 'json', 
+		statusCode: {
+			200:function(data) { getAuthoredBlogs(data.username); }, 
+			401:function() { $("#authoredblogs").html("Et ole kirjautunut"); }
+		}
+	});
 });
 
-function getAuthoredBlogs() {
-
-	var username; // Hae elementistä, johon käyttäjän nimi laitetaan näkyviin
+function getAuthoredBlogs(username) {
 
 	$.ajax({
 		type: "GET",
@@ -43,15 +52,32 @@ function getAuthoredBlogs() {
 		dataType: 'json',
 		statusCode: {
 			200:function(data) { 
-				var content;
+				var blogIDs = [];
+				var names = [];
 				for (var i = 0; i < data.length; i++)
 				{
-					var name = getBlogNameById(data[i].id); // funktio tiedostossa manageFollows.js
-					content += '<li><a href="/api/blog' + data[i].id + '>' + name + '</a></li>';
+					blogIDs.push(data[i].id);
 				}
-				$("#authoredblogs").html(content); },
+				getBlogNames(blogIDs, names, 0, displayAuthoredBlogs);
+			},
 			404:function() { $("#authoredblogs").html("Blogeja ei saatu haettua"); }
 		},
 	});
 
 }
+
+function displayAuthoredBlogs(blogIDs, names) {
+	if (blogIDs.length != 0)
+	{
+		var content = '<ul>';
+		for (var i = 0; i < blogIDs.length; i++)
+		{
+			content += '<li><a href="/api/blog/' + blogIDs[i] + '">' + names[i] + '</a></li>';
+		}
+		content += '</ul>';
+		$("#authoredblogs").html(content); 
+	}
+	else
+		$("#authoredblogs").html("Et vielä seuraa yhtään blogia");
+}
+

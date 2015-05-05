@@ -62,7 +62,8 @@ $(document).ready(function() {
 			statusCode: {
 				200:function(data) { $("#blogoutput").html("Viesti " + data["id"] + " tallennettu"); },
 				400:function() { $("#blogoutput").html("Tietoja puuttuu"); },
-				404:function(data) { $("#blogoutput").html(data["statusText"]); }
+				404:function(data) { $("#blogoutput").html(data["statusText"]); },
+				500:function(data) { $("#blogoutput").html(data["responseText"]); }
 			},
 		});
 	});

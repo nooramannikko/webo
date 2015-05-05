@@ -262,7 +262,7 @@ router.post('/:id/posts', function(req, res, next) {
           id: pID, 
           title: title,
           text: text,
-          author: author[0].username,
+          author: user.username,
           blog_id: id, 
           blogname: blog.name
           }).then(function(post) {
@@ -281,7 +281,7 @@ router.post('/:id/posts', function(req, res, next) {
             }
           }, 
           function(err) {
-            return res.status(500).json({error: 'ServerError'});
+            return res.status(500).json({error: 'ServerError2'});
           });
         }
         else {

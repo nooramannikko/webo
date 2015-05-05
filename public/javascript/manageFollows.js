@@ -149,11 +149,12 @@ function displayFollowedBlogs(blogIDs, names) {
 	//$("#blogsfollowed").html(blogIDs.length + " " + names.length); 
 	if (blogIDs.length != 0)
 	{
-		var content = "";
+		var content = '<ul>';
 		for (var i = 0; i < blogIDs.length; i++)
 		{
 			content += '<li><a href="/api/blog/' + blogIDs[i] + '">' + names[i] + '</a></li>';
 		}
+		content += '</ul>';
 		$("#blogsfollowed").html(content); 
 	}
 	else
