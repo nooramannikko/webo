@@ -1,6 +1,5 @@
 function updateUser() {
 
-	var username = document.getElementById("usernameinupdate").value;
 	var name = document.getElementById("newname").value;
 	var password = document.getElementById("newpassword").value;
 
@@ -11,7 +10,7 @@ function updateUser() {
 		data: { name: name, password: password }, 
 		statusCode: {
 			200: function() { $("#updateuser-success").html("Tiedot päivitetty onnistuneesti."); }, 
-			400: function() { $("#updateuser-success").html("Tarkista, että olet antanut sekä nimen että salasanan."); }, 
+			400: function() { $("#updateuser-success").html("Tarkista, että olet antanut joko nimen tai salasanan."); }, 
 			404: function() { $("#updateuser-success").html("Käyttäjää ei löydy"); }
 		}
 	});

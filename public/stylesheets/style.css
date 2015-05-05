@@ -4,6 +4,33 @@ body {
   background-color: #eee !important;
 }
 
+h1 {
+  font-family: 'Bree Serif', serif;
+  font-size: 24px;
+  color: #DB7093 !important;
+}
+
+.form-padding {
+	margin: 2px 0;
+}
+
+.sisennys {
+	padding-left: 80px;
+}
+
+.navbar-teksti {
+	padding: 15px 40px;
+	color: #ccc;
+}
+
+.kokoleveys {
+	width: 100%;
+}
+
+.leveysnelkyt {
+	width: 40%;
+}
+
 .sisalto {
 	margin: 15px auto !important;
 	max-width: 800px !important;
@@ -11,6 +38,10 @@ body {
 	padding: 20px !important;
 	border-radius: 5px;
 	box-shadow: 0 0 4px #ddd;
+}
+
+.navbar-right {
+	margin-right: 0 !important;
 }
 
 .btn-success {
@@ -32,10 +63,6 @@ body {
 	background-color: #C56584 !important;
 }
 
-h1 {
-  font-family: 'Bree Serif', serif;
-  color: #DB7093 !important;
-}
 
 
 
