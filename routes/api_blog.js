@@ -263,7 +263,8 @@ router.post('/:id/posts', function(req, res, next) {
           title: title,
           text: text,
           author: author[0].username,
-          blog_id: id
+          blog_id: id, 
+          blogname: blog.name
           }).then(function(post) {
             if (post) {
               pID += 1;
@@ -313,7 +314,7 @@ router.get('/:id/posts', function(req, res, next) {
           return res.status(200).json([]);
         }
         var data = [];
-        for (var i = result.count-1; i >= 0; i--) {
+        for (var i = result.rows.length-1; i >= 0; i--) {
           data.push({
             id: result.rows[i].id, 
             title: result.rows[i].title, 

@@ -405,11 +405,29 @@ router.get('/:username/follows', function(req, res, next) {
   models.User.findOne({where: {username: username}}).then(function(user) {
     if (user) {
       models.Follow.findAll({where: {username: username}}).then(function(follows) {
-        var data = [];
-        for (var i = 0; i < follows.length; i++) {
-          data.push({id: follows[i].id});
+        if (follows) {
+          // Hae blogit seuraamisien perusteella
+          var blogIDs = [];
+          for (var i = 0; i < follows.length; i++) {
+            blogIDs.push(follows[i].blog_id);
+          }
+          models.Blog.findAll({where: {id: blogIDs}}).then(function(blogs) {
+            if (blogs) {
+              var data = [];
+              for (var i = 0; i < blogs.length; i++) {
+                data.push({id: blogs[i].id});
+              }
+              return res.status(200).json(data);
+            }
+            else
+              return res.status(200).json([]);
+          }, 
+          function(err) {
+            return res.status(500).json({error: err});
+          });
         }
-        return res.status(200).json(data);
+        else
+          return res.status(200).json([]);
       }, 
       function(err) {
         return res.status(500).json({error: err});

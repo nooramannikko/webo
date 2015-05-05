@@ -81,6 +81,7 @@ passport.deserializeUser(function(user, done) {
 
 // Uloskirjaus
 function logout(req, res){
+  userNowLoggedIn = null;
   req.logout();
   req.session.destroy(function (err) {
     res.redirect('/');
@@ -104,9 +105,13 @@ router.get('/api/ht', function(req, res, next) {
 
 router.post('/logout', logout);
 
+// Käyttäjänimi
+var userNowLoggedIn = null;
+
 router.post('/login', 
   passport.authenticate('local'),
   function(req, res) {
+    userNowLoggedIn = req.body.username;
     models.User.findAll().then(function(users) {
     res.render('index', {
       host: req.headers.host,
@@ -121,6 +126,12 @@ router.get('/account', function(req, res, next) {
 
 router.get('/settings', function(req, res, next) {
   res.render('settings', {host: req.headers.host});
+});
+
+router.get('/username', function(req, res, next) {
+  if (userNowLoggedIn == null)
+    return res.status(401).json();
+  return res.status(200).json({username: userNowLoggedIn});
 });
 
 router.post('/api/blog*',apiAuth);

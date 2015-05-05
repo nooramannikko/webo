@@ -31,6 +31,20 @@ $(document).ready(function() {
 			},
 		});
 	});
+
+	$("#blogsfollowed").html("Haetaan");
+	$.ajax({
+		type: "GET", 
+		url: 'http://localhost:3000/username', 
+		dataType: 'json', 
+		statusCode: {
+			200:function(data) { getFollowedBlogs(data.username); }, 
+			401:function() { $("#blogsfollowed").html("Et ole kirjautunut"); }
+		}
+	});
+
+	/**/
+
 });
 
 function addFollow() {
@@ -65,9 +79,9 @@ function removeFollow() {
 	});
 }
 
-function getFollowedBlogs() {
+function getFollowedBlogs(username) {
 
-	var username; // Hae elementistä, johon käyttäjän nimi laitetaan näkyviin
+	$("#blogsfollowed").html("Haetaan blogeja käyttäjälle: " + username); 
 
 	$.ajax({
 		type: "GET",
@@ -75,29 +89,75 @@ function getFollowedBlogs() {
 		dataType: 'json',
 		statusCode: {
 			200:function(data) { 
-				var content;
-				for (var i = 0; i < data.length; i++)
+				if (data.length != 0 && typeof data[0] != 'undefined')
 				{
-					var name = getBlogNameById(data[i].id);
-					content += '<li><a href="/api/blog' + data[i].id + '>' + name + '</a></li>';
+					/*var content = "";
+					for (var i = 0; i < data.length; i++)
+					{
+						$("#blogsfollowed").html("Blogeja: " + content); 
+						content += '<li><a href="/api/blog/' + data[i].id + '">' + data[i].name + '</a></li>';
+					}
+					$("#blogsfollowed").html(content); */
+					var blogIDs = [];
+					var names = [];
+					for (var i = 0; i < data.length; i++)
+					{
+						blogIDs.push(data[i].id);
+					}
+					getBlogNames(blogIDs, names, 0, displayFollowedBlogs);
 				}
-				$("#blogsfollowed").html(content); 
+				else
+					$("#blogsfollowed").html("Et vielä seuraa yhtään blogia");
 			},
-			404:function() { $("#blogsfollowed").html("Seurattuja blogeja ei saatu haettua"); }
+			304:function() { $("#blogsfollowed").html("Et vielä seuraa yhtään blogia"); },
+			404:function() { $("#blogsfollowed").html("Seurattuja blogeja ei saatu haettua"); }, 
+			500:function() { $("#blogsfollowed").html("Seurattuja blogeja ei saatu haettua"); }
 		},
 	});
 
 }
 
-function getBlogNameById(id, next) {
-	$.ajax({
-		type: "GET",
-		url: 'http://localhost:3000/api/blog/' + id,
-		dataType: 'json',
-		statusCode: {
-			200:function(data) { next(data.name); },
-			404:function() { next("Blogin nimeä ei löydy"); }
-		},
-	});
+function getBlogNames(blogIDs, names, index, next) {
+
+	// Jos kaikki nimet haettu
+	if (index >= blogIDs.length) {
+		next(blogIDs, names);
+	}
+
+	// Hae lisää nimiä
+	else {
+		$.ajax({
+			type: "GET", 
+			url: 'http://localhost:3000/api/blog/' + blogIDs[index], 
+			dataType: 'json', 
+			statusCode: {
+				200: function(data) {
+					names.push(data.name); 
+					getBlogNames(blogIDs, names, index+1, next);
+				}, 
+				404:function() {
+					names.push("Nimi tuntematon");
+					getBlogNames(blogIDs, names, index+1, next);
+				}
+			}
+		});
+	}
 }
+
+function displayFollowedBlogs(blogIDs, names) {
+
+	//$("#blogsfollowed").html(blogIDs.length + " " + names.length); 
+	if (blogIDs.length != 0)
+	{
+		var content = "";
+		for (var i = 0; i < blogIDs.length; i++)
+		{
+			content += '<li><a href="/api/blog/' + blogIDs[i] + '">' + names[i] + '</a></li>';
+		}
+		$("#blogsfollowed").html(content); 
+	}
+	else
+		$("#blogsfollowed").html("Et vielä seuraa yhtään blogia");
+}
+
 

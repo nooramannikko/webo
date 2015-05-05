@@ -36,17 +36,18 @@ router.get('/:id', function(req, res, next) {
 // Hakee 10 uusinta blogikirjoitusta blogista riippumatta
 router.get('/', function(req, res, next) {
 
-  models.Post.findAll({limit: 10, order: 'createdAt DESC'}).then(function(result) {
+  models.Post.findAndCountAll({limit: 10, order: 'createdAt DESC'}).then(function(result) {
     if (result.count == 0 || typeof result.count == 'undefined') {
       return res.status(200).json([]);
     }
 
     var data = [];
-    for (var i = result.count-1; i >= 0; i--) {
+    for (var i = result.rows.length-1; i >= 0; i--) {
       data.push({
         id: result.rows[i].id, 
         title: result.rows[i].title, 
-        author: result.rows[i].author
+        author: result.rows[i].author, 
+        blog: result.rows[i].blogname
       });
 
       if(i == 0)

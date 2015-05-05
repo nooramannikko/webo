@@ -19,7 +19,6 @@ $(document).ready(function() {
 	});
 
 	$("#latestposts").html("Haetaan");
-
 	$.ajax({
 		type: "GET", 
 		url: 'http://localhost:3000/api/post/', 
@@ -32,7 +31,7 @@ $(document).ready(function() {
 					for (var i = 0; i < data.length; i++)
 					{
 						content += "<a href='/api/post/" + data[i].id + "'><h3>" + data[i].title + "</h3></a>";
-						content += "<p>" + data[i].author + "<br>" + "Blogin nimi" + "</p>";
+						content += "<p>Kirjoittanut: " + data[i].author + "<br>" + "Blogin nimi" + "</p>";
 					}
 					$("#latestposts").html(content);
 				}
@@ -46,27 +45,3 @@ $(document).ready(function() {
 
 });
 
-function getLatestPosts() {
-
-	$("#latestposts").html("Haetaan");
-
-	$.ajax({
-		type: "GET", 
-		url: 'http://localhost:3000/api/post/1', 
-		dataType: 'json', 
-		statusCode: {
-			200:function(data) { 
-				var content;
-				for (var i = 0; i < data.length; i++)
-				{
-					var name = getBlogNameById(data[i].id); // funktio tiedostossa manageFollows.js
-					content += '<a href="/api/post/' + data[i].id + '><h3>' + data[i].title + '</h3></a>';
-					content += '<p>' + data[i].author + '<br>' + name + '</p>';
-				}
-				$("#latestposts").html(content + data.length);
-			}, 
-			404:function() { $("#latestposts").html("Uusimpia blogikirjoituksia ei saatu haettua"); }, 
-			500:function() { $("#latestposts").html("Uusimpia blogikirjoituksia ei saatu haettua"); }
-		}
-	});
-}
