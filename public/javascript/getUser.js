@@ -35,7 +35,7 @@ $(document).ready(function() {
 	$("#authoredblogs").html("Haetaan");
 	$.ajax({
 		type: "GET", 
-		url: 'http://localhost:3000/username', 
+		url: 'http://localhost:3000/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) { getAuthoredBlogs(data.username); }, 

@@ -128,7 +128,7 @@ router.get('/settings', function(req, res, next) {
   res.render('settings', {host: req.headers.host});
 });
 
-router.get('/username', function(req, res, next) {
+router.get('/api/username', function(req, res, next) {
   if (userNowLoggedIn == null)
     return res.status(401).json();
   return res.status(200).json({username: userNowLoggedIn});
@@ -137,7 +137,6 @@ router.get('/username', function(req, res, next) {
 router.post('/api/blog*',apiAuth);
 router.put('/api/user/:username',apiAuth);
 router.delete('/api/blog/:id',apiAuth);
-/*router.get('/api/user/getuser',apiAuth);*/
 router.use('/api/blog/:id/author/:username',apiAuth);
 router.post('/api/blog/:id/posts',apiAuth);
 router.post('/api/post/:id/comments',apiAuth);

@@ -4,43 +4,30 @@ function updateUser() {
 	var password = document.getElementById("newpassword").value;
 
 	$.ajax({
-		type: "PUT", 
-		url: 'http://localhost:3000/api/user/' + username,
-		dataType: 'json', 
-		data: { name: name, password: password }, 
-		statusCode: {
-			200: function() { $("#updateuser-success").html("Tiedot päivitetty onnistuneesti."); }, 
-			400: function() { $("#updateuser-success").html("Tarkista, että olet antanut joko nimen tai salasanan."); }, 
-			404: function() { $("#updateuser-success").html("Käyttäjää ei löydy"); }
-		}
-	});
-
-	/*$.ajax({
 		// Hae autentikoitu käyttäjä
 		type: "GET", 
-		url: 'http://localhost:3000/api/user/getuser', 
+		url: 'http://localhost:3000/api/username', 
 		dataType: 'json', 
 		statusCode: {
-			200: function(data) { $("#output").html(data["username"]);
-				username = data["username"];
+			200: function(data) { var username = data["username"];
 				$.ajax({
 					type: "PUT", 
 					url: 'http://localhost:3000/api/user/' + username,
 					dataType: 'json', 
 					data: { name: name, password: password }, 
 					statusCode: {
-						200: function() { $("#output").html("Tiedot päivitetty"); }, 
-						400: function() { $("#output").html("Tyhjä nimi tai salasana, ei voitu päivittää"); }, 
-						404: function() { $("#output").html("Käyttäjää ei löydy"); }, 
-						500: function() { $("#output").html("Päivittäminen epäonnistui");}
+						200: function() { $("#updateuser-success").html("Tiedot päivitetty"); }, 
+						400: function() { $("#updateuser-success").html("Tyhjä nimi tai salasana, ei voitu päivittää"); }, 
+						404: function() { $("#updateuser-success").html("Käyttäjää ei löydy"); }, 
+						500: function() { $("#updateuser-success").html("Päivittäminen epäonnistui");}
 					}
 				});
 			}, 
 			404: function(data) { $("#output").html("Ei käyttäjää"); }
 		}
-	});*/
+	});
 }
-
+/* turha??
 function getUsername() {
 	$.ajax({
 		type: "GET", 
@@ -51,7 +38,7 @@ function getUsername() {
 			500:function(data) { $("#checkusername").html(data['error']); }
 		}
 	});
-}
+}*/
 
 function loadSettingsPage() {
 	$("#dynamiccontent").load("settings");

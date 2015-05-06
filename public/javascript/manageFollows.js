@@ -35,7 +35,7 @@ $(document).ready(function() {
 	$("#blogsfollowed").html("Haetaan");
 	$.ajax({
 		type: "GET", 
-		url: 'http://localhost:3000/username', 
+		url: 'http://localhost:3000/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) { getFollowedBlogs(data.username); }, 
@@ -91,13 +91,6 @@ function getFollowedBlogs(username) {
 			200:function(data) { 
 				if (data.length != 0 && typeof data[0] != 'undefined')
 				{
-					/*var content = "";
-					for (var i = 0; i < data.length; i++)
-					{
-						$("#blogsfollowed").html("Blogeja: " + content); 
-						content += '<li><a href="/api/blog/' + data[i].id + '">' + data[i].name + '</a></li>';
-					}
-					$("#blogsfollowed").html(content); */
 					var blogIDs = [];
 					var names = [];
 					for (var i = 0; i < data.length; i++)
