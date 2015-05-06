@@ -67,6 +67,10 @@ $(document).ready(function() {
 			},
 		});
 	});
+
 });
 
 
+function avaablogi(url) {
+	$("#dynamiccontent").load(url);
+}

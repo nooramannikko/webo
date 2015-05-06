@@ -145,7 +145,7 @@ function displayFollowedBlogs(blogIDs, names) {
 		var content = '<ul>';
 		for (var i = 0; i < blogIDs.length; i++)
 		{
-			content += '<li><a href="/api/blog/' + blogIDs[i] + '">' + names[i] + '</a></li>';
+			content += '<li><a href="#" onclick="avaablogi(\'/blog/' + blogIDs[i] + '\')">' + names[i] + '</a></li>';
 		}
 		content += '</ul>';
 		$("#blogsfollowed").html(content); 

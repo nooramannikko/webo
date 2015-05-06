@@ -128,6 +128,19 @@ router.get('/settings', function(req, res, next) {
   res.render('settings', {host: req.headers.host});
 });
 
+router.get('/blog/:id', function(req, res, next) {
+  var blogid = req.params['id'];
+  var query = { where: { id: blogid } };
+  models.Blog.findOne(query).then(function(blog) {
+    if (blog) {
+      res.render('blog', {host: req.headers.host, id: blog.id, name: blog.name});
+    }
+    else {
+      return res.status(404).json({error: 'BlogNotFound'});
+    }
+  });
+});
+
 router.get('/api/username', function(req, res, next) {
   if (userNowLoggedIn == null)
     return res.status(401).json();
