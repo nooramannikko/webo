@@ -10,6 +10,11 @@ h1 {
   color: #DB7093 !important;
 }
 
+footer {
+	float: right;
+	color: #777;
+}
+
 .form-padding {
 	margin: 2px 0;
 }

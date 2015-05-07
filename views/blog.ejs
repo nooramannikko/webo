@@ -1,5 +1,136 @@
-<!-- Blogisivu -->
-<h1><%= name %></h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<div id="blogin10kirjoitusta"</div>
+    <title>Tamplr</title>
 
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' href='/stylesheets/style.css'>
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Etusivu</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="navbar-nav nav">
+            <% if (locals.user) { %>
+            <li><a href="#" id="loadsettings">Asetukset</a></li>
+            <% } %>
+          </ul>
+          
+          <!-- Login formi ja sign up toiminto, vaihda käyttäjän nimeen ja log out -nappiin, kun käyttäjä on kirjautunut -->
+          <% if (locals.user) { %>
+            <form id="logoutbtn" method="POST" action="/logout" class="navbar-form navbar-right">
+              <button class="btn btn-success" type="submit">Log out</button>
+            </form>
+          <% } else { %>
+            <button class="navbar-form navbar-right btn btn-sgu" id="newaccount" onclick="loadAccountPage()">Sign up</button>
+            <form class="navbar-form navbar-right" id="login" method="POST" action="/login">
+              <div class="form-group">
+                <input type="text" placeholder="Username" class="form-control" name="username">
+              </div>
+              <div class="form-group">
+                <input type="password" placeholder="Password" class="form-control" name="password">
+              </div>
+              <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+          <% } %>
+          <ul class="navbar-nav nav navbar-right">
+            <% if (locals.user) { %>
+            <li class="navbar-teksti" id="currentuser">Kirjautuneena <strong><%= user.username %></strong></li>
+            <% } %>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Tamplr</h1>
+        <p>Tamplr on web-sivusto, jossa käyttäjät voivat kirjoitella blogikirjoituksia ja lukea toistensa kirjoituksia sekä tykätä ja kommentoida niitä.</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Lue lisää &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container sisalto" id="dynamiccontent">
+		<!-- Blogisivu -->
+		<h1><%= name %></h1>
+
+		<div id="blogin10kirjoitusta"></div>
+
+		<% if (locals.user) { %>
+		  <% var kirjoitusoikeus = false; %>
+		  <% for(var i=0; i<authors.length; i++) {%>
+		    <% if (locals.user == authors[i]) %>
+		      <% kirjoitusoikeus = true; %>
+		  <% } %>
+		  <% if (kirjoitusoikeus) { %>
+
+				<form id="newblogpost" method="POST" action="/api/blog">
+      	  title: <input type="text" name="title"><br>
+      	  text: <input type="text" name="text"><br>
+      	  <input type="submit" value="Lisää blogikirjoitus"><br>
+      	</form><br>
+
+      	username: <input id="usernametoadd" type="text"><br>
+      	<button id="adduserblog" onclick="addUser()">Lisää kirjoitusoikeus blogiin</button><br><br>
+
+      	username: <input id="usernametoremove" type="text"><br>
+      	<button id="removeuserblog" onclick="removeUser()">Poista kirjoitusoikeus blogista</button><br><br>
+    	
+    	<% } %>
+
+      username: <input id="username-follow" type="text"><br>
+      <button id="followblog" onclick="addFollow()">Seuraa blogia</button><br><br>
+
+      username: <input id="username-removefollow" type="text"><br>
+      <button id="unfollowblog" onclick="removeFollow()">Peru blogin seuraaminen</button><br><br>
+
+      <p id="followoutput"></p>
+
+    <% } %>
+
+		<hr>
+
+    	<footer>
+        	<p>&copy; nununu 2015</p>
+      	</footer>
+    </div> 
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="/javascript/createUser.js"></script>
+    <script src="/javascript/getUser.js"></script>
+    <script src="/javascript/getBlog.js"></script>
+    <script src="/javascript/getPost.js"></script>
+    <script src="/javascript/getpostComment.js"></script>
+    <script src="/javascript/deleteBlog.js"></script>
+    <script src="/javascript/updateUser.js"></script>
+    <script src="/javascript/updateBlog.js"></script>
+    <script src="/javascript/manageLikes.js"></script>
+    <script src="/javascript/manageFollows.js"></script>
+    <script src="/javascript/bootstrap.min.js"></script>
+    <script src="/javascript/authentication.js"></script>
+    <script src="/javascript/blogPage.js"></script>
+  </body>
+</html>

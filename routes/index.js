@@ -133,7 +133,22 @@ router.get('/blog/:id', function(req, res, next) {
   var query = { where: { id: blogid } };
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
-      res.render('blog', {host: req.headers.host, id: blog.id, name: blog.name});
+      blog.getAuthors({where: {id: req.user.id}}).then(function(a) {
+        var authors = [];
+        for(var i = 0; i < a.length; ++i) {
+          authors.push(a[i].username);
+        };
+
+        res.render('blog', {
+          host: req.headers.host, 
+          id: blog.id, 
+          name: blog.name, 
+          user: req.user,
+          authors: authors });
+      }, 
+      function(err) {
+        return res.status(500).json({error: 'GetAuthorNotWorking'});
+      });
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});

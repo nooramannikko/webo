@@ -73,7 +73,7 @@ function displayAuthoredBlogs(blogIDs, names) {
 		var content = '<ul>';
 		for (var i = 0; i < blogIDs.length; i++)
 		{
-			content += '<li><a href="#" onclick="avaablogi(\'/blog/' + blogIDs[i] + '\')">' + names[i] + '</a></li>';
+			content += '<li><a href="/blog/' + blogIDs[i] + '">' + names[i] + '</a></li>';
 		}
 		content += '</ul>';
 		$("#authoredblogs").html(content); 

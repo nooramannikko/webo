@@ -1,7 +1,8 @@
 function addUser() {
 
 	var username = document.getElementById("usernametoadd").value;
-	var id = document.getElementById("adduser-blog").value;
+	var id = document.URL;
+	id = id.substr(id.lastIndexOf('/') + 1);
 
 	$.ajax({
 		type: "PUT", 
@@ -18,7 +19,8 @@ function addUser() {
 function removeUser() {
 
 	var username = document.getElementById("usernametoremove").value;
-	var id = document.getElementById("removeuser-blog").value;
+	var id = document.URL;
+	id = id.substr(id.lastIndexOf('/') + 1);
 
 	$.ajax({
 		type: "DELETE", 

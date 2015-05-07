@@ -48,7 +48,8 @@ $(document).ready(function() {
 });
 
 function addFollow() {
-	var id = document.getElementById("blogid-follow").value;
+	var id = document.URL;
+	id = id.substr(id.lastIndexOf('/') + 1);
 	var username = document.getElementById("username-follow").value
 	$.ajax({
 		type: "PUT", 
@@ -64,7 +65,8 @@ function addFollow() {
 }
 
 function removeFollow() {
-	var id = document.getElementById("blogid-removefollow").value;
+	var id = document.URL;
+	id = id.substr(id.lastIndexOf('/') + 1);
 	var username = document.getElementById("username-removefollow").value
 	$.ajax({
 		type: "DELETE", 
@@ -145,7 +147,7 @@ function displayFollowedBlogs(blogIDs, names) {
 		var content = '<ul>';
 		for (var i = 0; i < blogIDs.length; i++)
 		{
-			content += '<li><a href="#" onclick="avaablogi(\'/blog/' + blogIDs[i] + '\')">' + names[i] + '</a></li>';
+			content += '<li><a href="/blog/' + blogIDs[i] + '">' + names[i] + '</a></li>';
 		}
 		content += '</ul>';
 		$("#blogsfollowed").html(content); 
