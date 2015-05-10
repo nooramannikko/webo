@@ -9,7 +9,7 @@ $(document).ready(function() {
 		var password = document.getElementById("accountpassword").value;
 		$.ajax({
 			type: "POST",
-			url: 'http://localhost:3000/api/user',
+			url: '/api/user',
 			data: {username: username, name: name, password: password}, 
 			dataType: 'json',
 			statusCode: {

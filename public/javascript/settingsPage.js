@@ -6,13 +6,13 @@ function updateUser() {
 	$.ajax({
 		// Hae autentikoitu käyttäjä
 		type: "GET", 
-		url: 'http://localhost:3000/api/username', 
+		url: '/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200: function(data) { var username = data["username"];
 				$.ajax({
 					type: "PUT", 
-					url: 'http://localhost:3000/api/user/' + username,
+					url: '/api/user/' + username,
 					dataType: 'json', 
 					data: { name: name, password: password }, 
 					statusCode: {
