@@ -12,7 +12,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type: "POST", 
-			url: 'http://localhost:3000/login', 
+			url: '/login', 
 			data: $("#login").serialize(),
 			dataType: 'json', 
 			statusCode: {
@@ -29,7 +29,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type: "POST", 
-			url: 'http://localhost:3000/lapi/blog', 
+			url: '/api/blog', 
 			data: $("#createnewblog").serialize(),
 			dataType: 'json', 
 			statusCode: {
@@ -43,7 +43,7 @@ $(document).ready(function() {
 	$("#latestposts").html("Haetaan");
 	$.ajax({
 		type: "GET", 
-		url: 'http://localhost:3000/api/post/', 
+		url: '/api/post/', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) { 
@@ -68,7 +68,7 @@ $(document).ready(function() {
 	$("#blogsfollowed").html("Haetaan");
 	$.ajax({
 		type: "GET", 
-		url: 'http://localhost:3000/api/username', 
+		url: '/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) { getFollowedBlogs(data.username); }, 
@@ -79,7 +79,7 @@ $(document).ready(function() {
 	$("#authoredblogs").html("Haetaan");
 	$.ajax({
 		type: "GET", 
-		url: 'http://localhost:3000/api/username', 
+		url: '/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) { getAuthoredBlogs(data.username); }, 
@@ -105,7 +105,7 @@ function getAuthoredBlogs(username) {
 
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:3000/api/user/' + username + '/blogs',
+		url: '/api/user/' + username + '/blogs',
 		dataType: 'json',
 		statusCode: {
 			200:function(data) { 
@@ -144,7 +144,7 @@ function getFollowedBlogs(username) {
 
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:3000/api/user/' + username + '/follows',
+		url: '/api/user/' + username + '/follows',
 		dataType: 'json',
 		statusCode: {
 			200:function(data) { 
@@ -180,7 +180,7 @@ function getBlogNames(blogIDs, names, index, next) {
 	else {
 		$.ajax({
 			type: "GET", 
-			url: 'http://localhost:3000/api/blog/' + blogIDs[index], 
+			url: '/api/blog/' + blogIDs[index], 
 			dataType: 'json', 
 			statusCode: {
 				200: function(data) {
