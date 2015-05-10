@@ -5,7 +5,7 @@ $(document).ready(function() {
 
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:3000/api/blog/' + href + '/posts',
+		url: '/api/blog/' + href + '/posts',
 		dataType: 'json',
 		statusCode: {
 			200:function(data) { tulostaBloginTiedot(data); },
@@ -22,7 +22,7 @@ $(document).ready(function() {
 		var data =  $("#newblogpost").serialize();
 		$.ajax({
 			type: "POST",
-			url: 'http://localhost:3000/api/blog/' + id + '/posts',
+			url: '/api/blog/' + id + '/posts',
 			data: data,
 			dataType: 'json',
 			statusCode: {
@@ -48,7 +48,7 @@ function tulostaBloginTiedot(data) {
 		$.ajax({
        		async: false,
 			type: "GET",
-			url: 'http://localhost:3000/api/post/' + data[i].id + '/commentcount',
+			url: '/api/post/' + data[i].id + '/commentcount',
 			dataType: 'json',
 			statusCode: {
 				200:function(data) { div.innerHTML += data.comments + ', Tykkäyksiä: '; },
@@ -58,7 +58,7 @@ function tulostaBloginTiedot(data) {
 		$.ajax({
        		async: false,
 			type: "GET",
-			url: 'http://localhost:3000/api/post/' + data[i].id,
+			url: '/api/post/' + data[i].id,
 			dataType: 'json',
 			statusCode: {
 				200:function(data) { div.innerHTML += data.likes + '<br><br>'; },
@@ -76,7 +76,7 @@ function addUser() {
 
 	$.ajax({
 		type: "PUT", 
-		url: 'http://localhost:3000/api/blog/' + id + '/author/' + username,
+		url: '/api/blog/' + id + '/author/' + username,
 		dataType: 'json', 
 		statusCode: {
 			200: function() { $("#addauthoreduser-success").html("Kirjoitusoikeus lisätty"); }, 
@@ -94,7 +94,7 @@ function removeUser() {
 
 	$.ajax({
 		type: "DELETE", 
-		url: 'http://localhost:3000/api/blog/' + id + '/author/' + username,
+		url: '/api/blog/' + id + '/author/' + username,
 		dataType: 'json', 
 		statusCode: {
 			200: function() { $("#removeauthoreduser-success").html("Kirjoitusoikeus poistettu"); }, 
@@ -110,14 +110,14 @@ function addFollow() {
 	$.ajax({
 		// Hae autentikoitu käyttäjä
 		type: "GET", 
-		url: 'http://localhost:3000/api/username', 
+		url: '/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) {
 				var username = data["username"];
 				$.ajax({
 					type: "PUT", 
-					url: 'http://localhost:3000/api/user/' + username + '/follows/' + id,
+					url: '/api/user/' + username + '/follows/' + id,
 					dataType: 'json',
 					statusCode: { 
 						200: function() { $("#followoutput").html("Seuraaminen lisätty")}, 
@@ -138,14 +138,14 @@ function removeFollow() {
 	$.ajax({
 		// Hae autentikoitu käyttäjä
 		type: "GET", 
-		url: 'http://localhost:3000/api/username', 
+		url: '/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) {
 				var username = data["username"];
 				$.ajax({
 					type: "DELETE", 
-					url: 'http://localhost:3000/api/user/' + username + '/follows/' + id,
+					url: '/api/user/' + username + '/follows/' + id,
 					dataType: 'json',
 					statusCode: { 
 						200: function() { $("#followoutput").html("Seuraaminen poistettu")}, 

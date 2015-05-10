@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type: "POST",
-			url: 'http://localhost:3000/api/post/' + id + '/comments',
+			url: '/api/post/' + id + '/comments',
 			data: data,
 			dataType: 'json',
 			statusCode: {
@@ -39,7 +39,7 @@ function loadComments() {
 
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:3000/api/post/' + id + '/comments',
+		url: '/api/post/' + id + '/comments',
 		dataType: 'json',
 		statusCode: {
 			200:function(data) { 
@@ -65,7 +65,7 @@ function addLike() {
 	$.ajax({
 		// Hae autentikoitu käyttäjä
 		type: "GET", 
-		url: 'http://localhost:3000/api/username', 
+		url: '/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) {
@@ -98,14 +98,14 @@ function removeLike() {
 	$.ajax({
 		// Hae autentikoitu käyttäjä
 		type: "GET", 
-		url: 'http://localhost:3000/api/username', 
+		url: '/api/username', 
 		dataType: 'json', 
 		statusCode: {
 			200:function(data) {
 				var username = data["username"];
 				$.ajax({
 					type: "DELETE", 
-					url: 'http://localhost:3000/api/user/' + username + '/likes/' + id,
+					url: '/api/user/' + username + '/likes/' + id,
 					dataType: 'json',
 					statusCode: { 
 						200: function() {
