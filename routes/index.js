@@ -125,7 +125,7 @@ router.get('/account', function(req, res, next) {
 });
 
 router.get('/settings', function(req, res, next) {
-  res.render('settings', {host: req.headers.host});
+  res.render('settings', {host: req.headers.host, user: req.user});
 });
 
 router.get('/blog/:id', function(req, res, next) {
@@ -153,6 +153,54 @@ router.get('/blog/:id', function(req, res, next) {
     else {
       return res.status(404).json({error: 'BlogNotFound'});
     }
+  });
+});
+
+router.get('/post/:id', function(req, res, next) {
+  var postid = req.params["id"];
+  models.Post.findOne({where: {id: postid}}).then(function(post) {
+    if (post) {
+      if (req.user) {
+        var liked = 'false'
+        models.Like.findOne({where: {postid: postid, username: req.user.username}}).then(function(like) {
+          if (like) 
+            liked = 'true';
+          res.render('post', {
+            host: req.headers.host,
+            id: post.id, 
+            title: post.title, 
+            text: post.text, 
+            author: post.author, 
+            blogid: post.blog_id, 
+            blogname: post.blogname, 
+            liked: liked, 
+            user: req.user
+          });
+        }, 
+        function(err) {
+          return res.status(500).json({error: err});
+        });
+      }
+      else {
+        res.render('post', {
+          host: req.headers.host,
+          id: post.id, 
+          title: post.title, 
+          text: post.text, 
+          author: post.author, 
+          blogid: post.blog_id, 
+          blogname: post.blogname, 
+          liked: 'false', 
+          user: req.user
+        });
+      }
+    }
+    else {
+      return res.status(404).json({error: 'PostNotFound'});
+    }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
   });
 });
 

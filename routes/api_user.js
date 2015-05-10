@@ -26,10 +26,10 @@ router.post('/', function(req, res, next) {
   if (!username || !usernameRegex) {
     return res.status(400).json({error: 'InvalidUserName'});
   }
-  if (!name) {
+  if (!name || name.length === 0) {
     return res.status(400).json({error: 'NameEmpty'});
   }
-  if (!password) {
+  if (!password || req.body.password.length === 0) {
     return res.status(400).json({error: 'PasswordEmpty'});
   }
 
@@ -245,9 +245,10 @@ router.delete('/:username/likes/:id', function(req, res, next) {
           models.Like.findOne(query).then(function(like) {
             if (like) {
               // Poista tykkäys kirjoituksesta
+              var postID = post.id;
               post.removePostLike(like).then(function() {
                 // Poista tykkäysobjekti
-                like.destroy().then(function() {
+                models.Like.destroy({where: {postid: postID, username: user.username}}).then(function() {
                   return res.status(200).json();
                 }, 
                 function(err) {
@@ -259,7 +260,7 @@ router.delete('/:username/likes/:id', function(req, res, next) {
               });
             }
             else {
-              return res.status(500).json({error: 'ServerError'});
+              return res.status(200).json();
             }
           }, 
           function(err) {
@@ -298,24 +299,36 @@ router.put('/:username/follows/:id', function(req, res, next) {
       }
       models.Blog.findOne({where: {id: id}}).then(function(blog) {
         if (blog) {
-          // Luo seuraamisobjekti
-          models.Follow.create({
-            id: fID, 
-            username: username,
-            blog_id: id
-          }).then(function(follow) {
-            fID += 1;
-            if (follow) {
-              // Luo yhteys
-              blog.addBlogFollower(follow).then(function() {
-                return res.status(200).json();
+          // Katso, onko seuraaminen jo luotu
+          models.Follow.findOne({where: {username: username, blog_id: id}}).then(function(oldFollow) {
+            if (oldFollow) {
+              // Ei tehdä uutta
+              return res.status(200).json();
+            }
+            else {
+              // Luo seuraamisobjekti
+              models.Follow.create({
+                id: fID, 
+                username: username,
+                blog_id: id
+              }).then(function(follow) {
+                fID += 1;
+                if (follow) {
+                  // Luo yhteys
+                  blog.addBlogFollower(follow).then(function() {
+                    return res.status(200).json();
+                  }, 
+                  function(err) {
+                    return res.status(500).json({error: err});
+                  });
+                }
+                else {
+                  return res.status(500).json({error: 'ServerError'});
+                }
               }, 
               function(err) {
                 return res.status(500).json({error: err});
               });
-            }
-            else {
-              return res.status(500).json({error: 'ServerError'});
             }
           }, 
           function(err) {
@@ -373,7 +386,7 @@ router.delete('/:username/follows/:id', function(req, res, next) {
               });
             }
             else {
-              return res.status(500).json({error: 'ServerError'});
+              return res.status(200).json();
             }
           }, 
           function(err) {

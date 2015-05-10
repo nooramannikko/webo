@@ -143,4 +143,15 @@ router.post('/:id/comments', function(req, res, next) {
   });
 });
 
+// Hakee kommenttien lukumäärän
+router.get('/:id/commentcount', function(req, res, next) {
+  var id = req.params['id'];
+  models.Comment.findAll({where: {postid: id}}).then(function(comments) {
+    return res.status(200).json({comments: comments.length});
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
+  });
+});
+
 module.exports = router;

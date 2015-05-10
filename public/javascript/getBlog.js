@@ -61,13 +61,12 @@ $(document).ready(function() {
 			data: data,
 			dataType: 'json',
 			statusCode: {
-				200:function(data) { $("#blogoutput").html("Viesti " + data["id"] + " tallennettu"); },
-				400:function() { $("#blogoutput").html("Tietoja puuttuu"); },
-				404:function(data) { $("#blogoutput").html(data["statusText"]); },
-				500:function(data) { $("#blogoutput").html(data["responseText"]); }
+				200:function(data) { $("#newblogpost-success").html("Viesti " + data["id"] + " tallennettu onnistuneesti."); },
+				400:function() { $("#newblogpost-success").html("Tietoja puuttuu."); },
+				404:function(data) { $("#newblogpost-success").html(data["statusText"]); },
+				500:function(data) { $("#newblogpost-success").html(data["responseText"]); }
 			},
 		});
 	});
 
 });
-

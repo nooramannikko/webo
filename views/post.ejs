@@ -1,4 +1,4 @@
-<!-- Blogisivu -->
+<!-- Blogikirjoitussivu -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +34,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="navbar-nav nav">
             <% if (locals.user) { %>
-            <li><a href="/../../#" id="loadsettings">Asetukset</a></li>
+            <li><a href="/" id="loadsettings">Asetukset</a></li>
             <% } %>
           </ul>
           
@@ -75,44 +75,36 @@
 
     <div class="container sisalto" id="dynamiccontent">
 		<!-- Blogisivu -->
-		<h1><%= name %></h1>
+		<h1><%= title %></h1>
 
-		<div id="blogin10kirjoitusta"></div>
+		<div id="blogikirjoitus">
+      <p id="viestinkirjoittaja">Kirjoittanut: <%= author %></p>
+      <p id="viestinsisalto"><%= text %></p>
+    </div>
+
+    <div id="viestinkommentit">
+      <form id="lataakommentit-auto">
+        <input id="autoload" type="checkbox" name="checkbox" value="Lataa kommentit automaattisesti"><br>
+      </form><br>
+      <ul id="ladatutkommentit"></ul>
+    </div>
+
+    <div><a href="../../blog/<%= blogid %>">Palaa blogiin: <%= blogname %></a></div><br>
 
 		<% if (locals.user) { %>
-		  <% var kirjoitusoikeus = false; %>
-		  <% for(var i=0; i<authors.length; i++) {%>
-		    <% if (locals.user == authors[i]) %>
-		      <% kirjoitusoikeus = true; %>
-		  <% } %>
-		  <% if (kirjoitusoikeus) { %>
+      <% if (liked == 'false') { %>
+        <button onclick="addLike()">Tykkää</button>
+      <% } else { %>
+        <button onclick="removeLike()">Poista tykkäys</button>
+      <% } %>
+      <p id="like-error"></p>
 
-				<h3>Lisää blogikirjoitus</h3>
-        <form id="newblogpost" method="POST" action="/api/blog">
-      	  <input type="text" name="title" placeholder="Otsikko"><br>
-      	  <input type="text" name="text" placeholder="Viesti" class="blogiviesti"><br>
-      	  <input type="submit" value="Lähetä"><br>
-      	</form><br>
-        <p id="newblogpost-success"></p>
-
-        <h3>Lisää kirjoitusoikeus blogiin haluamallesi käyttäjälle</h3>
-      	<input id="usernametoadd" type="text" placeholder="Käyttäjä"><br>
-      	<button id="adduserblog" onclick="addUser()">Valmis</button><br><br>
-        <p id="addauthoreduser-success"></p>
-
-        <h3>Poista kirjoitusoikeus blogiin haluamaltasi käyttäjältä</h3>
-      	<input id="usernametoremove" type="text" placeholder="Käyttäjä"><br>
-      	<button id="removeuserblog" onclick="removeUser()">Valmis</button><br><br>
-        <p id="removeauthoreduser-success"></p><br>
-    	
-    	<% } %>
-
-      <button id="followblog" onclick="addFollow()">Seuraa blogia</button>
-
-      <button id="unfollowblog" onclick="removeFollow()">Peru blogin seuraaminen</button><br><br>
-
-      <p id="followoutput"></p>
-
+      <h3>Kirjoita uusi kommentti</h3>
+      <form id="newcomment" method="POST" action="/api/post">
+        <input type="text" name="text" placeholder="Kommentti"><br>
+        <input type="submit" value="Lähetä"><br>
+      </form><br>
+      <p id="comment-success"></p>
     <% } %>
 
 		<hr>
@@ -129,6 +121,6 @@
     <script src="/javascript/accountPage.js"></script>
     <script src="/javascript/settingsPage.js"></script>
     <script src="/javascript/frontPage.js"></script>
-    <script src="/javascript/blogPage.js"></script>
+    <script src="/javascript/postPage.js"></script>
   </body>
 </html>
