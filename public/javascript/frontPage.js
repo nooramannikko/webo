@@ -33,7 +33,7 @@ $(document).ready(function() {
 			data: $("#createnewblog").serialize(),
 			dataType: 'json', 
 			statusCode: {
-				201:function(data) { $("#newblog-success").html("Blogi luotu."); }, 
+				201:function(data) { window.location.reload(); }, 
 				400:function() { $("#newblog-success").html("Anna blogille nimi"); }, 
 				500: function(data) { $("#newblog-success").html("Server error: " + data.error); }
 			}

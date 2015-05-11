@@ -133,26 +133,50 @@ router.get('/blog/:id', function(req, res, next) {
   var query = { where: { id: blogid } };
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
-      blog.getAuthors({where: {id: req.user.id}}).then(function(a) {
+      if (req.user) {
+        var followed = 'false'
         var authors = [];
-        for(var i = 0; i < a.length; ++i) {
-          authors.push(a[i].username);
-        };
+        models.Follow.findOne({where: {blog_id: blogid, username: req.user.username}}).then(function(follow) {
+          if (follow) 
+            followed = 'true';
+          blog.getAuthors({where: {id: req.user.id}}).then(function(a) {
+            for(var i = 0; i < a.length; ++i) {
+              authors.push(a[i].username);
+            }
+          
+          res.render('blog', {
+            host: req.headers.host, 
+            id: blog.id, 
+            name: blog.name, 
+            user: req.user,
+            authors: authors,
+            followed: followed });
 
+          }, 
+          function(err) {
+            return res.status(500).json({error: 'GetAuthorNotWorking'});
+          });
+        }, 
+        function(err) {
+          return res.status(500).json({error: err});
+        });
+      }
+      else {
         res.render('blog', {
-          host: req.headers.host, 
-          id: blog.id, 
-          name: blog.name, 
-          user: req.user,
-          authors: authors });
-      }, 
-      function(err) {
-        return res.status(500).json({error: 'GetAuthorNotWorking'});
-      });
+            host: req.headers.host, 
+            id: blog.id, 
+            name: blog.name, 
+            user: req.user,
+            authors: authors,
+            followed: followed });
+      }
     }
     else {
       return res.status(404).json({error: 'BlogNotFound'});
     }
+  }, 
+  function(err) {
+    return res.status(500).json({error: err});
   });
 });
 

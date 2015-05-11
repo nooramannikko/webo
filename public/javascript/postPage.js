@@ -24,7 +24,7 @@ $(document).ready(function() {
 			data: data,
 			dataType: 'json',
 			statusCode: {
-				201:function(data) { $("#comment-success").html("Kommentti lisätty"); },
+				201:function(data) { window.location.reload(); },
 				400:function() { $("#comment-success").html("Kommentin teksti puuttuu"); },
 				404:function(data) { $("#comment-success").html(data["statusText"]); }
 			},

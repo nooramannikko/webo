@@ -75,9 +75,22 @@
 
     <div class="container sisalto" id="dynamiccontent">
 		<!-- Blogisivu -->
+    <div class="floatoikea">
+    <% if (locals.user) { %>
+      <% if (followed == 'false') { %>
+        <button id="followblog" onclick="addFollow()">Seuraa blogia</button>
+      <% } else { %>
+        <button id="unfollowblog" onclick="removeFollow()">Peru blogin seuraaminen</button><br><br>
+      <% } %>
+    
+      <p id="followoutput"></p>
+
+    <% } %>
+    </div>
+
 		<h1><%= name %></h1>
 
-		<div id="blogin10kirjoitusta"></div>
+		<div class="sisennys2" id="blogin10kirjoitusta"></div>
 
 		<% if (locals.user) { %>
 		  <% var kirjoitusoikeus = false; %>
@@ -86,6 +99,9 @@
 		      <% kirjoitusoikeus = true; %>
 		  <% } %>
 		  <% if (kirjoitusoikeus) { %>
+        <br>
+
+        <hr>
 
 				<h3>Lisää blogikirjoitus</h3>
         <form id="newblogpost" method="POST" action="/api/blog">
@@ -106,13 +122,6 @@
         <p id="removeauthoreduser-success"></p><br>
     	
     	<% } %>
-
-      <button id="followblog" onclick="addFollow()">Seuraa blogia</button>
-
-      <button id="unfollowblog" onclick="removeFollow()">Peru blogin seuraaminen</button><br><br>
-
-      <p id="followoutput"></p>
-
     <% } %>
 
 		<hr>

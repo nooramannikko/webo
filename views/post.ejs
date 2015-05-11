@@ -75,32 +75,39 @@
 
     <div class="container sisalto" id="dynamiccontent">
 		<!-- Blogisivu -->
-		<h1><%= title %></h1>
+    <div class="floatoikea"><a href="../../blog/<%= blogid %>">Palaa blogiin: <%= blogname %></a></div>
 
-		<div id="blogikirjoitus">
-      <p id="viestinkirjoittaja">Kirjoittanut: <%= author %></p>
-      <p id="viestinsisalto"><%= text %></p>
-    </div>
-
-    <div id="viestinkommentit">
-      <form id="lataakommentit-auto">
-        <input id="autoload" type="checkbox" name="checkbox" value="Lataa kommentit automaattisesti"><br>
-      </form><br>
-      <ul id="ladatutkommentit"></ul>
-    </div>
-
-    <div><a href="../../blog/<%= blogid %>">Palaa blogiin: <%= blogname %></a></div><br>
-
-		<% if (locals.user) { %>
+    <div class="floatoikea">
+    <% if (locals.user) { %>
       <% if (liked == 'false') { %>
         <button onclick="addLike()">Tykkää</button>
       <% } else { %>
         <button onclick="removeLike()">Poista tykkäys</button>
       <% } %>
       <p id="like-error"></p>
+    <% } %>
+    </div>
 
+    <h1><%= title %></h1>
+    
+		<div class="sisennys2" id="blogikirjoitus">
+      <p id="viestinkirjoittaja">Kirjoittanut: <%= author %></p>
+      <p id="viestinsisalto"><%= text %></p>
+    </div>
+
+    <hr>
+
+    <div class="sisennys2" id="viestinkommentit">
+      <form id="lataakommentit-auto">
+        Lataa kommentit automaattisesti: <input id="autoload" type="checkbox" name="checkbox" value="Lataa kommentit automaattisesti"><br>
+      </form><br>
+      <ul id="ladatutkommentit"></ul>
+    </div>
+
+    
+    <% if (locals.user) { %>
       <h3>Kirjoita uusi kommentti</h3>
-      <form id="newcomment" method="POST" action="/api/post">
+      <form class="sisennys2" id="newcomment" method="POST" action="/api/post">
         <input type="text" name="text" placeholder="Kommentti"><br>
         <input type="submit" value="Lähetä"><br>
       </form><br>

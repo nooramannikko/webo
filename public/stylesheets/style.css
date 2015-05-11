@@ -6,7 +6,13 @@ body {
 
 h1 {
   font-family: 'Bree Serif', serif;
-  font-size: 24px;
+  font-size: 26px;
+  color: #DB7093 !important;
+}
+
+h3 {
+  font-family: 'Bree Serif', serif;
+  font-size: 20px;
   color: #DB7093 !important;
 }
 
@@ -15,12 +21,25 @@ footer {
 	color: #777;
 }
 
+hr {
+	border-color: #ccc;
+}
+
+.floatoikea {
+	float: right;
+	padding-left: 40px;
+}
+
 .form-padding {
 	margin: 2px 0;
 }
 
+.sisennys2 {
+	padding-left: 40px !important;
+}
+
 .sisennys {
-	padding-left: 80px;
+	padding-left: 80px !important;
 }
 
 .navbar-teksti {

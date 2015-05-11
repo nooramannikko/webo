@@ -74,18 +74,18 @@
     <div class="container sisalto" id="dynamiccontent">
       <!-- 10 uusinta blogikirjoitusta -->
       <h1>Uusimmat blogikirjoitukset</h1>
-      <div id="latestposts" ></div>
+      <div class="sisennys2" id="latestposts" ></div>
       <!-- Kirjautunut -->
       <% if (locals.user) { %>
         <!-- Lista käyttäjän seuraamista blogeista -->
         <h1>Seuraamasi blogit</h3>
-        <div id="blogsfollowed"></div>
+        <div class="sisennys2" id="blogsfollowed"></div>
         <!-- Lista blogeista, joihin käyttäjällä on kirjoitusoikeus -->
         <h1>Blogit, joihin sinulla on kirjoitusoikeus</h1>
-        <div id="authoredblogs"></div>
+        <div class="sisennys2" id="authoredblogs"></div>
         <!-- Luo uusi blogi -toiminto tai linkki -->
         <h1>Luo uusi blogi!</h1>
-        <form method="POST" action="/api/blog" id="createnewblog">
+        <form class="sisennys2" method="POST" action="/api/blog" id="createnewblog">
           <input type="text" name="name" placeholder="Blogin nimi"><br>
           <input type="submit" value="Luo blogi">
         </form><br>

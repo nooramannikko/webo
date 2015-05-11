@@ -26,7 +26,7 @@ $(document).ready(function() {
 			data: data,
 			dataType: 'json',
 			statusCode: {
-				200:function(data) { $("#newblogpost-success").html("Viesti " + data["id"] + " tallennettu onnistuneesti."); },
+				201:function(data) { window.location.reload(); },
 				400:function() { $("#newblogpost-success").html("Tietoja puuttuu."); },
 				404:function(data) { $("#newblogpost-success").html(data["statusText"]); },
 				500:function(data) { $("#newblogpost-success").html(data["responseText"]); }
