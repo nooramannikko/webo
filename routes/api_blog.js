@@ -192,15 +192,12 @@ router.delete('/:id/author/:username', function(req, res, next) {
   var id = req.params['id'];
   var user = req.user;
 
-  if(typeof id !== 'number')
-    return res.status(403).json({error: 'IdNotNumber'});
-
   var query = {where: {id: id}};
   models.Blog.findOne(query).then(function(blog) {
     if (blog) {
       // Tarkista, että nykyisellä käyttäjällä on kirjoitusoikeus tähän blogiin
-      blog.getAuthors({where: {id: user.id}}).then(function(authors) {
-        if (authors) {
+      blog.getAuthors({where: {id: user.id}}).then(function(authors){
+        if (authors[0]) {
           // Tarkista, ettei oletusblogi
           if (!/^([0-9]*)$/.test(id)) {
             return res.status(403).json({error: 'CannotDeleteDefaultBlog'});

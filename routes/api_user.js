@@ -367,13 +367,13 @@ router.delete('/:username/follows/:id', function(req, res, next) {
       }
       models.Blog.findOne({where: {id: id}}).then(function(blog) {
         if (blog) {
-          // Etsi tykkäysobjekti
-          var query = {where: {username: username, id: blog.id}};
+          // Etsi seurausobjekti
+          var query = {where: {username: username, blog_id: blog.id}};
           models.Follow.findOne(query).then(function(follow) {
             if (follow) {
               // Poista seuraaminen blogista
               blog.removeBlogFollower(follow).then(function() {
-                // Poista tykkäysobjekti
+                // Poista seurausobjekti
                 follow.destroy().then(function() {
                   return res.status(200).json();
                 }, 
