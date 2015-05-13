@@ -98,7 +98,10 @@ function loadSettingsPage() {
 }
 
 function loadAccountPage() {
-	$("#dynamiccontent").load("account");
+	$("#dynamiccontent").load("account", function(res, status, xhr) {
+		if (status == "error")
+			$("#dynamiccontent").load("../../account");
+	});
 }
 
 function getAuthoredBlogs(username) {

@@ -75,11 +75,7 @@ function addLike() {
 					url: 'http://localhost:3000/api/user/' + username + '/likes/' + id,
 					dataType: 'json',
 					statusCode: { 
-						200: function() {
-							var autoload = document.getElementById("autoload").checked;
-							window.location.reload();
-							document.getElementById("autoload").checked = autoload;
-						}, 
+						200: function() { window.location.reload(); }, 
 						401: function() { $("#like-error").html("Ei käyttöoikeutta"); }, 
 						404: function() { $("#like-error").html("Käyttäjää tai viestiä ei ole olemassa"); }, 
 						500: function(data) { $("#like-error").html("Server error: " + data["error"]); }
@@ -108,11 +104,7 @@ function removeLike() {
 					url: '/api/user/' + username + '/likes/' + id,
 					dataType: 'json',
 					statusCode: { 
-						200: function() {
-							var autoload = document.getElementById("autoload").checked;
-							window.location.reload();
-							document.getElementById("autoload").checked = autoload;
-						}, 
+						200: function() { window.location.reload(); }, 
 						401: function() { $("#like-error").html("Ei käyttöoikeutta"); }, 
 						404: function() { $("#like-error").html("Käyttäjää tai viestiä ei ole olemassa"); }, 
 						500: function(data) { $("#like-error").html("Server error: " + data["error"]); }
